@@ -1,6 +1,6 @@
 #pragma once
 #include "EntityComponentSystem.hpp"
-#include "PositionComponent.hpp"
+#include "TransformComponent.hpp"
 #include "SpriteComponent.hpp"
 
 

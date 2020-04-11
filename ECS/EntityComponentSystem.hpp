@@ -18,6 +18,7 @@ inline ComponentID generateComponentTypeID() {
 }
 
 template <typename T> inline ComponentID generateComponentTypeID() noexcept {
+	static_assert (std::is_base_of<Component, T>::value, "");
 	static ComponentID typeID = generateComponentTypeID();
 	return typeID;
 }
@@ -42,15 +43,18 @@ class Entity {
 private:
 	bool active = true;
 	std::vector<std::unique_ptr<Component>> components;
+
 	ComponentArray componentArray;
 	ComponentBitSet componentBitSet;
 public:
 	void update() {
 		for (auto& c : components) c->update();
+	}
+
+	void draw() {
 		for (auto& c : components) c->draw();
 	}
 
-	void draw() {}
 	bool isActive() const { return active; }
 	void destroy() { active = false; }
 

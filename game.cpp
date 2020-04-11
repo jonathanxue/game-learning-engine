@@ -3,10 +3,16 @@
 #include "GameObject.hpp"
 #include "Map.hpp"
 
+#include "EntityComponentSystem.hpp"
+#include "Components.hpp"
+
 GameObject* player;
 Map* map;
 
 SDL_Renderer* Game::renderer = nullptr;
+
+Manager manager;
+auto& newPlayer(manager.addEntity());
 
 Game::Game() {
 }
@@ -35,6 +41,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	}
 	player = new GameObject("assets/test.png", 0,0);
 	map = new Map();
+
+	newPlayer.addComponent<PositionComponent>();
+	newPlayer.getComponent<PositionComponent>().setPos(200, 200);
 }
 
 void Game::handleEvents() {
@@ -51,6 +60,8 @@ void Game::handleEvents() {
 
 void Game::update() {
 	player->Update();
+	manager.update();
+	std::cout << newPlayer.getComponent<PositionComponent>().x() << ", " << newPlayer.getComponent<PositionComponent>().y() << std::endl;
 }
 
 void Game::render() {

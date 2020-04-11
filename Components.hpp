@@ -13,6 +13,11 @@ public:
 		ypos = 0;
 	}
 
+	void update() override {
+		xpos++;
+		ypos++;
+	}
+
 	void setPos(int x, int y) {
 		xpos = x;
 		ypos = y;

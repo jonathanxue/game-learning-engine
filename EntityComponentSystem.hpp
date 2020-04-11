@@ -18,7 +18,7 @@ inline ComponentID generateComponentTypeID() {
 }
 
 template <typename T> inline ComponentID generateComponentTypeID() noexcept {
-	static ComponentID typeID = generateComponentID();
+	static ComponentID typeID = generateComponentTypeID();
 	return typeID;
 }
 
@@ -34,7 +34,7 @@ public:
 	virtual void init() {}
 	virtual void update() {}
 	virtual void draw() {}
-	virtual ~Component();
+	virtual ~Component() {}
 };
 
 
@@ -73,7 +73,7 @@ public:
 	}
 
 	template<typename T> T& getComponent() const {
-		auto ptr(componentArray[getComponentTypeID<T>()]);
+		auto ptr(componentArray[generateComponentTypeID<T>()]);
 		return *static_cast<T*>(ptr);
 	}
 };

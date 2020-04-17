@@ -70,7 +70,7 @@ void Game::update() {
 
 	if (Collision::AABB(player.getComponent<ColliderComponent>().collider, wall.getComponent<ColliderComponent>().collider)) {
 		player.getComponent<TransformComponent>().scale = 1;
-		printf("Collision");
+		player.getComponent<TransformComponent>().velocity * -1;
 	}
 }
 

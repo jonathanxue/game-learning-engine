@@ -2,8 +2,12 @@
 
 #define SDL_MAIN_HANDLED
 #include "SDL.h"
+#include "SDL_image.h"
 
+#include <vector>
 #include <iostream>
+
+class ColliderComponent;
 
 class Game {
 public:
@@ -22,6 +26,8 @@ public:
 
 	static SDL_Renderer* renderer;
 	static SDL_Event event;
+	static std::vector<ColliderComponent*> colliders;
+
 private:
 	bool isRunning = false;
 	SDL_Window *window;

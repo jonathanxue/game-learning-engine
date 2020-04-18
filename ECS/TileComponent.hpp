@@ -24,13 +24,13 @@ public:
 
 		switch (tileID) {
 		case 0:
-			path = "assets/water.png";
-			break;
-		case 1:
 			path = "assets/dirt.png";
 			break;
-		case 2:
+		case 1:
 			path = "assets/grass.png";
+			break;
+		case 2:
+			path = "assets/water.png";
 			break;
 		default:
 			break;
@@ -38,7 +38,7 @@ public:
 	}
 
 	void init() override {
-		entity->addComponent<TransformComponent>(static_cast<float>(tileRect.x), static_cast<float>(tileRect.y), static_cast<float>(tileRect.w), static_cast<float>(tileRect.h), 1);
+		entity->addComponent<TransformComponent>(static_cast<float>(tileRect.x), static_cast<float>(tileRect.y), tileRect.w, tileRect.h, 1);
 		transform = &entity->getComponent<TransformComponent>();
 
 		entity->addComponent<SpriteComponent>(path);

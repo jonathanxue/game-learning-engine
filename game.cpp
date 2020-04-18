@@ -16,9 +16,12 @@ Manager manager;
 auto& player(manager.addEntity());
 auto& wall(manager.addEntity());
 
-auto& tile0(manager.addEntity());
-auto& tile1(manager.addEntity());
-auto& tile2(manager.addEntity());
+enum groubLabels : std::size_t {
+	groupMap,
+	groupPlayers,
+	groupEnemies,
+	groupColliders
+};
 
 Game::Game() {
 }
@@ -47,22 +50,19 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	}
 
 	map = new Map();
-
-	tile0.addComponent<TileComponent>(200,200,32,32,0);
-	tile1.addComponent<TileComponent>(250,250,32,32,1);
-	tile1.addComponent<ColliderComponent>("dirt");
-	tile2.addComponent<TileComponent>(150,150,32,32,2);
-	tile2.addComponent<ColliderComponent>("grass");
+	Map::LoadMap("assets/py_16x16.txt",16,16);
 
 	//ecs
 	player.addComponent<TransformComponent>(2);
 	player.addComponent<SpriteComponent>("assets/player.png");
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderComponent>("player");
+	player.addGroup(groupPlayers);
 
 	wall.addComponent<TransformComponent>(300.0f, 300.0f, 300, 20, 1);
 	wall.addComponent<SpriteComponent>("assets/dirt.png");
 	wall.addComponent<ColliderComponent>("wall");
+	wall.addGroup(groupMap);
 }
 
 void Game::handleEvents() {
@@ -81,15 +81,26 @@ void Game::update() {
 	manager.update();
 
 	for (auto cc : colliders) {
-		Collision::AABB(player.getComponent<ColliderComponent>(), *cc);
+		//Collision::AABB(player.getComponent<ColliderComponent>(), *cc);
 	}
 }
+
+auto& tiles(manager.getGroup(groupMap));
+auto& players(manager.getGroup(groupPlayers));
+auto& enemies(manager.getGroup(groupEnemies));
 
 void Game::render() {
 	SDL_RenderClear(renderer);
 	//Add stuff to update here
-	//map->DrawMap();
-	manager.draw();
+	for (auto& t : tiles) {
+		t->draw();
+	}
+	for (auto& p : players) {
+		p->draw();
+	}
+	for (auto& e : enemies) {
+		e->draw();
+	}
 	SDL_RenderPresent(renderer);
 }
 
@@ -98,4 +109,10 @@ void Game::clean() {
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
 	std::cout << "Game Cleaned\n";
+}
+
+void Game::addTile(int id, int x, int y) {
+	auto& tile(manager.addEntity());
+	tile.addComponent<TileComponent>(x, y, 32, 32, id);
+	tile.addGroup(groupMap);
 }

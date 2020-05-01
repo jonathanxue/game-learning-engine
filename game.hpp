@@ -7,6 +7,7 @@
 #include <vector>
 #include <iostream>
 
+class AssetManager;
 class ColliderComponent;
 
 class Game {
@@ -26,19 +27,19 @@ public:
 
 	static SDL_Renderer* renderer;
 	static SDL_Event event;
-	//static std::vector<ColliderComponent*> colliders;
 	static bool isRunning;
 
 	static SDL_Rect camera;
+	static AssetManager* assets;
 
 	enum groubLabels : std::size_t {
 		groupMap,
 		groupPlayers,
-		groupColliders
+		groupColliders,
+		groupProjectiles
 	};
 
 private:
-	
 	SDL_Window *window;
 };
 

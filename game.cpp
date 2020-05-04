@@ -18,6 +18,7 @@ SDL_Rect Game::camera = { 0,0,800,640 };
 AssetManager* Game::assets = new AssetManager(&manager);
 
 bool Game::isRunning = false;
+Game::gameState Game::state = Game::gameState::game_menu;
 
 auto& player(manager.addEntity());
 auto& label(manager.addEntity());
@@ -52,6 +53,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		std::cout << "Error : SDL_TTF" << std::endl;
 	}
 
+	assets->AddTexture("background", "assets/openSeas_texture.png");
 	assets->AddTexture("terrain", "assets/beachmap.png");
 	assets->AddTexture("player", "assets/player_anims.png");
 	assets->AddTexture("projectile", "assets/testproj.png");
@@ -78,6 +80,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	assets->CreateProjectile(Vector2D(100, 500), Vector2D(2, 0), 200, 2, "projectile");
 }
 
+auto& backgrounds(manager.getGroup(Game::groupBackgrounds));
 auto& tiles(manager.getGroup(Game::groupMap));
 auto& players(manager.getGroup(Game::groupPlayers));
 auto& colliders(manager.getGroup(Game::groupColliders));
@@ -118,6 +121,7 @@ void Game::update() {
 		}
 	}
 
+	//Camera following
 	camera.x = player.getComponent<TransformComponent>().position.x - 400;
 	camera.y = player.getComponent<TransformComponent>().position.y - 320;
 
@@ -138,6 +142,9 @@ void Game::update() {
 void Game::render() {
 	SDL_RenderClear(renderer);
 	//Add stuff to update here
+	for (auto& t : backgrounds) {
+		t->draw();
+	}
 	for (auto& t : tiles) {
 		t->draw();
 	}
@@ -160,7 +167,6 @@ void Game::render() {
 void Game::clean() {
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
-	assets->~AssetManager();
 	SDL_Quit();
 	std::cout << "Game Cleaned\n";
 }

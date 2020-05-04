@@ -25,19 +25,27 @@ public:
 	void clean();
 	bool running() { return isRunning; }
 
+	enum groubLabels : std::size_t {
+		groupBackgrounds,
+		groupMap,
+		groupPlayers,
+		groupColliders,
+		groupProjectiles
+	};
+
+	enum class gameState {
+		game_running,
+		game_menu,
+		debug
+	};
+
 	static SDL_Renderer* renderer;
 	static SDL_Event event;
 	static bool isRunning;
 
 	static SDL_Rect camera;
 	static AssetManager* assets;
-
-	enum groubLabels : std::size_t {
-		groupMap,
-		groupPlayers,
-		groupColliders,
-		groupProjectiles
-	};
+	static gameState state;
 
 private:
 	SDL_Window *window;

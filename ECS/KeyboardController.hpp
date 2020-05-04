@@ -34,6 +34,9 @@ public:
 				sprite->play("walk");
 				sprite->spriteFlip = SDL_FLIP_HORIZONTAL;
 				break;
+			case SDLK_p:
+				if (Game::state == Game::gameState::game_menu) { Game::state = Game::gameState::game_running; }
+				else if (Game::state == Game::gameState::game_running) { Game::state = Game::gameState::game_menu; }
 			default:
 				break;
 			}

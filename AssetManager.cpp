@@ -4,7 +4,7 @@
 AssetManager::AssetManager(Manager* man) : manager(man)
 {}
 
-AssetManager::~AssetManager() {}
+AssetManager::~AssetManager() { free(manager); }
 
 void AssetManager::CreateProjectile(Vector2D pos, Vector2D vel, int range, int speed, std::string id) {
 	auto& projectile(manager->addEntity());

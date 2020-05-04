@@ -19,7 +19,7 @@ public:
 	}
 	~UILabel(){}
 
-	void SetLabelText(std::string text, std::string font) {
+	void SetLabelText(const std::string& text, const std::string& font) {
 		SDL_Surface* surf = TTF_RenderText_Blended(Game::assets->GetFont(labelFont), text.c_str(), textColour);
 		labelTexture = SDL_CreateTextureFromSurface(Game::renderer, surf);
 		SDL_FreeSurface(surf);
@@ -28,6 +28,7 @@ public:
 	}
 	void draw() override {
 		SDL_RenderCopy(Game::renderer, labelTexture, nullptr, &position);
+		SDL_DestroyTexture(this->labelTexture);
 	}
 
 private:

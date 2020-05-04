@@ -160,6 +160,7 @@ void Game::render() {
 void Game::clean() {
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
+	assets->~AssetManager();
 	SDL_Quit();
 	std::cout << "Game Cleaned\n";
 }

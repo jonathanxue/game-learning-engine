@@ -1,9 +1,7 @@
 #pragma once
 
 #include "../game.hpp"
-#include "EntityComponentSystem.hpp"
-//#include "Components.hpp"
-#include "UIButton.hpp"
+#include "Components.hpp"
 
 
 class MouseController : public Component {
@@ -34,10 +32,16 @@ public:
 			case SDL_BUTTON_LEFT:
 				if (button->coordInBounds(Game::event.button.x, Game::event.button.y)) {
 					button->buttonReleaseHandler();
+					button->buttonFunction();
 				}
 				break;
 			default:
 				break;
+			}
+		}
+		if (Game::event.type == SDL_MOUSEMOTION) {
+			if (!button->coordInBounds(Game::event.button.x, Game::event.button.y)) {
+				button->buttonReleaseHandler();
 			}
 		}
 	}

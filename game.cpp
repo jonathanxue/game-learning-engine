@@ -86,10 +86,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	label.addComponent<UILabel>(10, 10, "TestLabel", defaultFont, defaultFontColour);
 
-	button.addComponent<UIButton>(10, 100, 100, 50, "TestButton");
+	button.addComponent<UIButton>(10, 100, 100, 50, "Test1");
 	button.addComponent<MouseController>();
 
-	button2.addComponent<UIButton>(10, 200, 100, 50, "TestButton2");
+	button2.addComponent<UIButton>(10, 200, 100, 50, "Test2");
 	button2.addComponent<MouseController>();
 
 	assets->CreateProjectile(Vector2D(100, 100), Vector2D(2, 0), 200, 2, "projectile");

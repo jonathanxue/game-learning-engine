@@ -21,7 +21,6 @@ public:
 		//Set font to default font
 		btnText = UILabel::UILabel(xpos, ypos, buttonText, Game::defaultFont, Game::defaultFontColour);
 		btnText.updateButtonPos(static_cast<int>(xpos + position.w / 2), static_cast<int>(ypos + position.h / 2));
-
 		btnTexture = Game::assets->GetTexture("button_default");
 	}
 
@@ -37,19 +36,22 @@ public:
 
 	//Darken button to show button pressed
 	void buttonPressHandler() {
+		//Prevent multiple firing events
+		if (!isPressed) { isPressed = true; }
 		btnTexture = Game::assets->GetTexture("button_pressed");
-		isPressed = true;
 	}
 
-	//Actually fire event, return button to normal
+	//Return button to normal
 	void buttonReleaseHandler() {
 		btnTexture = Game::assets->GetTexture("button_default");
-		buttonFunction();
 	}
 
 	//Logic for button function, refactor later
 	void buttonFunction() {
-		printf("Button pressed!\n");
+		if (isPressed) {
+			isPressed = false;
+			printf("so cash\n");
+		}
 	}
 
 	void draw() override {

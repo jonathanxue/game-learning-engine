@@ -7,23 +7,34 @@
 #include "AssetManager.hpp"
 #include <sstream>
 
+//Level controllers
 Map* map;
 Manager manager;
 
+//engine components
 SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
-
 SDL_Rect Game::camera = { 0,0,800,640 };
 
+//Asset manager
 AssetManager* Game::assets = new AssetManager(&manager);
 
-bool Game::isRunning = false;
-Game::gameState Game::state = Game::gameState::game_menu;
+//Default values
+std::string Game::defaultFont = "Devanagari";
+SDL_Color Game::defaultFontColour = { 255,255,255,255 }; //White
 
+//Gamestate stuff
+Game::gameState Game::state = Game::gameState::game_running;
+bool Game::isRunning = false;
+
+//Level entities
 auto& player(manager.addEntity());
 auto& label(manager.addEntity());
+auto& button(manager.addEntity());
+auto& button2(manager.addEntity());
 
 Game::Game() {
+	Game::window = nullptr;
 }
 
 Game::~Game() {
@@ -58,7 +69,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	assets->AddTexture("player", "assets/player_anims.png");
 	assets->AddTexture("projectile", "assets/testproj.png");
 
+	//UI textures
 	assets->AddFont("Devanagari", "assets/AdobeDevanagari-Regular.otf", 16);
+	assets->AddTexture("button_default", "assets/button_default.png");
+	assets->AddTexture("button_pressed", "assets/button_pressed.png");
 
 	map = new Map("terrain", 3, 32);
 	map->LoadMap("assets/testmap.map",16,10);
@@ -70,10 +84,15 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.addComponent<ColliderComponent>("player");
 	player.addGroup(groupPlayers);
 
-	SDL_Color white = { 255,255,255,255 };
-	label.addComponent<UILabel>(10, 10, "TestLabel", "Devanagari", white);
+	label.addComponent<UILabel>(10, 10, "TestLabel", defaultFont, defaultFontColour);
 
-	assets->CreateProjectile(Vector2D(100, 100), Vector2D(2,0), 200, 2, "projectile");
+	button.addComponent<UIButton>(10, 100, 100, 50, "TestButton");
+	button.addComponent<MouseController>();
+
+	button2.addComponent<UIButton>(10, 200, 100, 50, "TestButton2");
+	button2.addComponent<MouseController>();
+
+	assets->CreateProjectile(Vector2D(100, 100), Vector2D(2, 0), 200, 2, "projectile");
 	assets->CreateProjectile(Vector2D(100, 200), Vector2D(2, 0), 200, 2, "projectile");
 	assets->CreateProjectile(Vector2D(100, 300), Vector2D(2, 0), 200, 2, "projectile");
 	assets->CreateProjectile(Vector2D(100, 400), Vector2D(2, 0), 200, 2, "projectile");
@@ -122,8 +141,8 @@ void Game::update() {
 	}
 
 	//Camera following
-	camera.x = player.getComponent<TransformComponent>().position.x - 400;
-	camera.y = player.getComponent<TransformComponent>().position.y - 320;
+	camera.x = static_cast<int>(player.getComponent<TransformComponent>().position.x) - 400;
+	camera.y = static_cast<int>(player.getComponent<TransformComponent>().position.y) - 320;
 
 	if (camera.x < 0) {
 		camera.x = 0;
@@ -161,6 +180,8 @@ void Game::render() {
 		e->draw();
 	}*/
 	label.draw();
+	button.draw();
+	button2.draw();
 	SDL_RenderPresent(renderer);
 }
 

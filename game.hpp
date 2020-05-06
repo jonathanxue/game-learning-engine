@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <iostream>
+#include <string>
 
 class AssetManager;
 class ColliderComponent;
@@ -46,6 +47,9 @@ public:
 	static SDL_Rect camera;
 	static AssetManager* assets;
 	static gameState state;
+
+	static std::string defaultFont;
+	static SDL_Color defaultFontColour;
 
 private:
 	SDL_Window *window;

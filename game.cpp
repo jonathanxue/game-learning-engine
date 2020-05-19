@@ -20,7 +20,7 @@ SDL_Rect Game::camera = { 0,0,800,640 };
 AssetManager* Game::assets = new AssetManager(&manager);
 
 //Default values
-std::string Game::defaultFont = "Devanagari";
+std::string Game::defaultFont = "Fixedsys";
 SDL_Color Game::defaultFontColour = { 255,255,255,255 }; //White
 
 //Gamestate stuff
@@ -55,7 +55,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 		renderer = SDL_CreateRenderer(window, -1, 0);
 		if (renderer) {
-			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 		}
 		isRunning = true;
 	}
@@ -64,13 +64,15 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		std::cout << "Error : SDL_TTF" << std::endl;
 	}
 
-	assets->AddTexture("background", "assets/openSeas_texture.png");
-	assets->AddTexture("terrain", "assets/beachmap.png");
+	//assets->AddTexture("background", "assets/openSeas_texture.png");
+	assets->AddTexture("terrain", "assets/grassmap_textures.png");
 	assets->AddTexture("player", "assets/player_anims.png");
-	assets->AddTexture("projectile", "assets/testproj.png");
+	assets->AddTexture("projectile", "assets/testprojectile.png");
+
+	assets->AddTexture("collider", "assets/hitbox.png");
 
 	//UI textures
-	assets->AddFont("Devanagari", "assets/AdobeDevanagari-Regular.otf", 16);
+	assets->AddFont("Fixedsys", "assets/vgafix.fon", 16);
 	assets->AddTexture("button_default", "assets/button_default.png");
 	assets->AddTexture("button_pressed", "assets/button_pressed.png");
 
@@ -80,8 +82,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	//ecs
 	player.addComponent<TransformComponent>(4);
 	player.addComponent<SpriteComponent>("player", true);
-	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderComponent>("player");
+	player.addComponent<KeyboardController>();
+
+	player.getComponent<ColliderComponent>().setVisible(false);
+
 	player.addGroup(groupPlayers);
 
 	label.addComponent<UILabel>(10, 10, "TestLabel", defaultFont, defaultFontColour);
@@ -92,16 +97,16 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	button2.addComponent<UIButton>(10, 200, 100, 50, "Test2");
 	button2.addComponent<MouseController>();
 
-	assets->CreateProjectile(Vector2D(100, 100), Vector2D(2, 0), 200, 2, "projectile");
-	assets->CreateProjectile(Vector2D(100, 200), Vector2D(2, 0), 200, 2, "projectile");
-	assets->CreateProjectile(Vector2D(100, 300), Vector2D(2, 0), 200, 2, "projectile");
-	assets->CreateProjectile(Vector2D(100, 400), Vector2D(2, 0), 200, 2, "projectile");
-	assets->CreateProjectile(Vector2D(100, 500), Vector2D(2, 0), 200, 2, "projectile");
+	assets->CreateProjectile(Vector2D(100, 100), Vector2D(2, 0), 500, 2, "projectile");
+	assets->CreateProjectile(Vector2D(100, 200), Vector2D(2, 0), 500, 2, "projectile");
+	assets->CreateProjectile(Vector2D(100, 300), Vector2D(2, 0), 500, 2, "projectile");
+	assets->CreateProjectile(Vector2D(100, 400), Vector2D(2, 0), 500, 2, "projectile");
+	assets->CreateProjectile(Vector2D(100, 500), Vector2D(2, 0), 500, 2, "projectile");
 }
 
-auto& backgrounds(manager.getGroup(Game::groupBackgrounds));
-auto& tiles(manager.getGroup(Game::groupMap));
-auto& players(manager.getGroup(Game::groupPlayers));
+auto& backgrounds(manager.getGroup(Game::groupBackgrounds)); //Background of window
+auto& tiles(manager.getGroup(Game::groupMap)); //Environment tiles that interact with player
+auto& players(manager.getGroup(Game::groupPlayers)); //Maybe add group for NPCs
 auto& colliders(manager.getGroup(Game::groupColliders));
 auto& projectiles(manager.getGroup(Game::groupProjectiles));
 
@@ -123,7 +128,7 @@ void Game::update() {
 
 	std::stringstream ss;
 	ss << "Player position: " << playerPos;
-	label.getComponent<UILabel>().SetLabelText(ss.str(), "Devanagari");
+	label.getComponent<UILabel>().SetLabelText(ss.str(), "Fixedsys");
 
 	manager.refresh();
 	manager.update();
@@ -161,9 +166,9 @@ void Game::update() {
 void Game::render() {
 	SDL_RenderClear(renderer);
 	//Add stuff to update here
-	for (auto& t : backgrounds) {
+	/*for (auto& t : backgrounds) {
 		t->draw();
-	}
+	}*/
 	for (auto& t : tiles) {
 		t->draw();
 	}

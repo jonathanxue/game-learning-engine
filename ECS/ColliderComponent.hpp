@@ -5,7 +5,8 @@
 #include "../TextureManager.hpp"
 
 class ColliderComponent : public Component {
-
+private:
+	bool isVisible = false;
 public:
 
 	SDL_Rect collider;
@@ -27,13 +28,21 @@ public:
 		collider.h = collider.w = size;
 	}
 
+	ColliderComponent(std::string t, int xpos, int ypos, int width, int height) {
+		tag = t;
+		collider.x = xpos;
+		collider.y = ypos;
+		collider.h = height;
+		collider.w = width;
+	}
+
 	void init() override {
 		if (!entity->hasComponent<TransformComponent>()) {
 			entity->addComponent<TransformComponent>();
 		}
 		transform = &entity->getComponent<TransformComponent>();
 
-		tex = TextureManager::LoadTexture("assets/colTex.png");
+		tex = TextureManager::LoadTexture("assets/hitbox.png");
 		srcRect = { 0, 0, 32, 32 };
 		destRect = { collider.x, collider.y, collider.w, collider.h };
 
@@ -46,14 +55,25 @@ public:
 
 			collider.w = transform->width * transform->scale;
 			collider.h = transform->height * transform->scale;
+
+			destRect.w = collider.w;
+			destRect.h = collider.h;
 		}
 
+		//This is for non tile entities, they will not have an initialized destRect or collider rectangle. So we do it here. This makes entities more flexible as we add them
 		destRect.x = collider.x - Game::camera.x;
 		destRect.y = collider.y - Game::camera.y;
+
 	}
 
 	void draw() override {
-		TextureManager::Draw(tex, srcRect, destRect, SDL_FLIP_NONE);
+		if (isVisible) {
+			TextureManager::Draw(tex, srcRect, destRect, SDL_FLIP_NONE);
+		}
+	}
+
+	void setVisible(bool v) {
+		isVisible = v;
 	}
 
 };

@@ -30,8 +30,8 @@ public:
 		if (Game::event.type == SDL_MOUSEBUTTONUP) {
 			switch (Game::event.button.button) {
 			case SDL_BUTTON_LEFT:
+				button->buttonReleaseHandler();
 				if (button->coordInBounds(Game::event.button.x, Game::event.button.y)) {
-					button->buttonReleaseHandler();
 					button->buttonFunction();
 				}
 				break;
@@ -39,10 +39,10 @@ public:
 				break;
 			}
 		}
-		if (Game::event.type == SDL_MOUSEMOTION) {
+		/*if (Game::event.type == SDL_MOUSEMOTION) {
 			if (!button->coordInBounds(Game::event.button.x, Game::event.button.y)) {
 				button->buttonReleaseHandler();
 			}
-		}
+		}*/
 	}
 };

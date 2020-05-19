@@ -32,6 +32,7 @@ public:
 		setTexture(id);
 	}
 
+	//TODO animate more than just player
 	SpriteComponent(std::string id, bool isAnimated) {
 		animated = isAnimated;
 
@@ -59,6 +60,7 @@ public:
 
 		srcRect.x = 0;
 		srcRect.y = 0;
+		//TODO change this, it will clip if we change the dimensions of hitbox
 		srcRect.w = transform->width;
 		srcRect.h = transform->height;
 

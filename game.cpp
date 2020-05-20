@@ -1,6 +1,7 @@
 #include "game.hpp"
 #include "TextureManager.hpp"
 #include "Map.hpp"
+#include "Background.hpp"
 #include "ECS/Components.hpp"
 #include "Vector2D.hpp"
 #include "Collision.hpp"
@@ -9,6 +10,7 @@
 
 //Level controllers
 Map* map;
+Background* background;
 Manager manager;
 
 //engine components
@@ -78,6 +80,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	map = new Map("terrain", 3, 32);
 	map->LoadMap("assets/testmap.map",16,10);
+
+	background = new Background("terrain", 3, 32);
+	background->LoadBackground("assets/testback.map", 16, 10);
+
 
 	//ecs
 	player.addComponent<TransformComponent>(4);
@@ -166,9 +172,9 @@ void Game::update() {
 void Game::render() {
 	SDL_RenderClear(renderer);
 	//Add stuff to update here
-	/*for (auto& t : backgrounds) {
+	for (auto& t : backgrounds) {
 		t->draw();
-	}*/
+	}
 	for (auto& t : tiles) {
 		t->draw();
 	}

@@ -1,8 +1,6 @@
 #pragma once
 #include <string>
 
-
-
 class Background {
 public:
 	Background(std::string tID, int mapScale, int tileSize);

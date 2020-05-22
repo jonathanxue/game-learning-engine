@@ -53,6 +53,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
 		std::cout << "Subsystems initialized" << std::endl;
 
+		//Default shit, maybe change
+		Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+
 		window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
 
 		renderer = SDL_CreateRenderer(window, -1, 0);
@@ -199,6 +202,7 @@ void Game::render() {
 void Game::clean() {
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
+	SDL_CloseAudio();
 	SDL_Quit();
 	std::cout << "Game Cleaned\n";
 }

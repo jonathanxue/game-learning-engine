@@ -10,5 +10,6 @@
 #include "UIPage.hpp"
 #include "MouseController.hpp"
 #include "KeyboardController.hpp"
+#include "AudioComponent.hpp"
 
 

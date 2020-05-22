@@ -10,14 +10,18 @@ private:
 	int range = 0;
 	int speed = 0;
 	int distance = 0;
+
+	std::string startSound = "";
+	std::string mainSound = "spellmoving";
+	std::string endSound = "spellhit";
+
 	Vector2D velocity;
 
 public:
 	ProjectileComponent(int range, int speed, Vector2D vel) : speed(speed), range(range), velocity(vel)
 	{}
 
-	~ProjectileComponent()
-	{}
+	~ProjectileComponent() {}
 
 	void init() override {
 		transform = &entity->getComponent<TransformComponent>();
@@ -32,7 +36,7 @@ public:
 			entity->destroy();
 		}
 		else if (transform->position.x > Game::camera.x + Game::camera.w || transform->position.x < Game::camera.x 
-			|| transform->position.y > Game::camera.y + Game::camera.h || transform->position.y < Game::camera.y){
+			|| transform->position.y > Game::camera.y + Game::camera.h || transform->position.y < Game::camera.y)	{
 			entity->destroy();
 		}
 	}

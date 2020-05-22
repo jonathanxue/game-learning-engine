@@ -4,14 +4,16 @@
 
 
 class MouseController : public Component {
+private:
+	UIButton* button;
 public:
 
-	UIButton* button;
-	TransformComponent* trans;
+	~MouseController() {
+		free(button);
+	}
 
 	void init() override {
 		button = &entity->getComponent<UIButton>();
-		trans = &entity->getComponent<TransformComponent>();
 	}
 
 	void update() override {

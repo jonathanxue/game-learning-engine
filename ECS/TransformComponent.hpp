@@ -37,6 +37,8 @@ public:
 		scale = sc;
 	}
 
+	~TransformComponent() {}
+
 	void init() override {
 		velocity.Zero();
 	}

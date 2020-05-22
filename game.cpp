@@ -6,6 +6,7 @@
 #include "Vector2D.hpp"
 #include "Collision.hpp"
 #include "AssetManager.hpp"
+#include "MusicPlayer.hpp"
 #include <sstream>
 
 //Level controllers
@@ -28,6 +29,9 @@ SDL_Color Game::defaultFontColour = { 255,255,255,255 }; //White
 //Gamestate stuff
 Game::gameState Game::state = Game::gameState::game_running;
 bool Game::isRunning = false;
+
+//Other globals
+MusicPlayer* musicplayer;
 
 //Level entities
 auto& player(manager.addEntity());
@@ -55,6 +59,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 		//Default shit, maybe change
 		Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+		musicplayer = new MusicPlayer();
 
 		window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
 
@@ -68,6 +73,13 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	if (TTF_Init() == -1) {
 		std::cout << "Error : SDL_TTF" << std::endl;
 	}
+
+	assets->AddMusic("defaultBGM", "assets/testBGM.mp3");
+	assets->AddSoundEffect("spellmoving", "assets/spell.wav");
+	assets->AddSoundEffect("spellhit", "assets/interface4.wav");
+
+	musicplayer->setSong("defaultBGM");
+	//musicplayer->play();
 
 	//assets->AddTexture("background", "assets/openSeas_texture.png");
 	assets->AddTexture("terrain", "assets/grassmap_textures.png");
@@ -93,24 +105,24 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.addComponent<SpriteComponent>("player", true);
 	player.addComponent<ColliderComponent>("player");
 	player.addComponent<KeyboardController>();
-
 	player.getComponent<ColliderComponent>().setVisible(false);
-
 	player.addGroup(groupPlayers);
 
 	label.addComponent<UILabel>(10, 10, "TestLabel", defaultFont, defaultFontColour);
 
 	button.addComponent<UIButton>(10, 100, 100, 50, "Test1");
+	button.addComponent<SoundEffectComponent>("spellhit", 0);
 	button.addComponent<MouseController>();
 
+	button2.addComponent<SoundEffectComponent>("spellhit", 0);
 	button2.addComponent<UIButton>(10, 200, 100, 50, "Test2");
 	button2.addComponent<MouseController>();
 
 	assets->CreateProjectile(Vector2D(100, 100), Vector2D(2, 0), 500, 2, "projectile");
 	assets->CreateProjectile(Vector2D(100, 200), Vector2D(2, 0), 500, 2, "projectile");
 	assets->CreateProjectile(Vector2D(100, 300), Vector2D(2, 0), 500, 2, "projectile");
-	assets->CreateProjectile(Vector2D(100, 400), Vector2D(2, 0), 500, 2, "projectile");
-	assets->CreateProjectile(Vector2D(100, 500), Vector2D(2, 0), 500, 2, "projectile");
+	//assets->CreateProjectile(Vector2D(100, 400), Vector2D(2, 0), 500, 2, "projectile");
+	//assets->CreateProjectile(Vector2D(100, 500), Vector2D(2, 0), 500, 2, "projectile");
 }
 
 auto& backgrounds(manager.getGroup(Game::groupBackgrounds)); //Background of window
@@ -150,6 +162,7 @@ void Game::update() {
 	}
 	for (auto& p : projectiles) {
 		if (Collision::AABB(player.getComponent<ColliderComponent>().collider, p->getComponent<ColliderComponent>().collider)) {
+			p->getComponent<SoundEffectComponent>().stop();
 			p->destroy();
 		}
 	}

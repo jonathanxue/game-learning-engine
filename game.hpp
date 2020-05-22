@@ -11,6 +11,7 @@
 
 class AssetManager;
 class ColliderComponent;
+class MusicPlayer;
 
 class Game {
 private:

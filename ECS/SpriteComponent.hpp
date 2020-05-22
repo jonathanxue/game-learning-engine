@@ -42,9 +42,7 @@ public:
 		setTexture(id);
 	}
 
-	~SpriteComponent() {
-		
-	}
+	~SpriteComponent() {}
 
 	void setTexture(std::string id) {
 		texture = Game::assets->GetTexture(id);

@@ -30,7 +30,6 @@ public:
 
 	~UIButton() {}
 
-
 	bool coordInBounds(int xpos, int ypos) {
 		if (xpos <= (position.x + position.w) && xpos >= position.x && ypos <= (position.y + position.h) && ypos >= position.y) {
 			return true;
@@ -53,6 +52,7 @@ public:
 	//Logic for button function, refactor later
 	void buttonFunction() {
 		if (isPressed) {
+			entity->getComponent<SoundEffectComponent>().play();
 			isPressed = false;
 			printf("so cash\n");
 		}

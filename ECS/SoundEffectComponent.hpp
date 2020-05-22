@@ -3,24 +3,30 @@
 #include "Components.hpp"
 
 //This shit is mainly for sound effects
-class AudioComponent : public Component {
+class SoundEffectComponent : public Component {
 private:
 	Mix_Chunk* chunk;
 	int repetitions = -1; //-1 default, one repetition
 	int channel = -1; // -1 default, first available channel
 
 public:
-	AudioComponent() = default;
+	SoundEffectComponent() = default;
 
-	AudioComponent(std::string id) {
+	SoundEffectComponent(std::string id) {
+		setAudio(id);
+	}
+	
+	SoundEffectComponent(std::string id, int rep) :  repetitions(rep) {
 		setAudio(id);
 	}
 
-	AudioComponent(std::string id, int rep, int chan) : channel(chan), repetitions(rep) {
+	SoundEffectComponent(std::string id, int rep, int chan) : channel(chan), repetitions(rep) {
 		setAudio(id);
 	}
 
-	~AudioComponent();
+	~SoundEffectComponent() {
+		//Mix_FreeChunk(chunk);
+	}
 
 	void init() override {
 
@@ -32,5 +38,9 @@ public:
 
 	void play() {
 		Mix_PlayChannel(channel, chunk, repetitions); // 1 makes one more loop (twice in total)
+	}
+
+	void stop() {
+		Mix_HaltChannel(channel);
 	}
 };

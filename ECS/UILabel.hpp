@@ -1,14 +1,17 @@
 #pragma once
 
 #include "EntityComponentSystem.hpp"
-#include "../AssetManager.hpp"
-#include "../game.hpp"
 
-#include <SDL.h>
-#include <SDL_ttf.h>
 #include <string>
 
 class UILabel : public Component {
+private:
+	SDL_Rect position;
+	std::string labelText;
+	std::string labelFont;
+	SDL_Color textColour;
+	SDL_Texture* labelTexture;
+
 public:
 	UILabel() {
 		position.x = position.y = position.w = position.h = 0;
@@ -58,11 +61,4 @@ public:
 	void draw() override {
 		SDL_RenderCopy(Game::renderer, labelTexture, nullptr, &position);
 	}
-
-private:
-	SDL_Rect position;
-	std::string labelText;
-	std::string labelFont;
-	SDL_Color textColour;
-	SDL_Texture* labelTexture;
 };

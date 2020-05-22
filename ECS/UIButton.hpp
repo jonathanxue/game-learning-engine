@@ -1,13 +1,17 @@
 #pragma once
 #include "Components.hpp"
 
-#include <SDL.h>
-#include <SDL_ttf.h>
 #include <string>
 
+//TODO: Add button sounds effects
 class UIButton : public Component {
-public:
+private:
+	SDL_Rect position, src;
+	UILabel btnText;
+	SDL_Texture* btnTexture;
+	bool isPressed = false;
 
+public:
 	UIButton(int xpos, int ypos, int width, int height, std::string buttonText) {
 		position.x = xpos;
 		position.y = ypos;
@@ -58,10 +62,4 @@ public:
 		TextureManager::Draw(btnTexture, src, position, SDL_FLIP_NONE);
 		btnText.draw();
 	}
-
-private:
-	SDL_Rect position, src;
-	UILabel btnText;
-	SDL_Texture* btnTexture;
-	bool isPressed = false;
 };

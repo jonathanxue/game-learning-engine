@@ -1,7 +1,6 @@
 #pragma once
 
 #include "EntityComponentSystem.hpp"
-#include "SDL.h"
 
 
 class TileComponent : public Component {

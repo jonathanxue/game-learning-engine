@@ -1,10 +1,17 @@
 #pragma once
 
-#include "EntityComponentSystem.hpp"
 #include "Components.hpp"
-#include "../Vector2D.hpp"
 
 class ProjectileComponent : public Component {
+private:
+	TransformComponent* transform;
+	//SpriteComponent* sprite;
+
+	int range = 0;
+	int speed = 0;
+	int distance = 0;
+	Vector2D velocity;
+
 public:
 	ProjectileComponent(int range, int speed, Vector2D vel) : speed(speed), range(range), velocity(vel)
 	{}
@@ -29,13 +36,4 @@ public:
 			entity->destroy();
 		}
 	}
-
-private:
-	TransformComponent* transform;
-	//SpriteComponent* sprite;
-
-	int range = 0;
-	int speed = 0;
-	int distance = 0;
-	Vector2D velocity;
 };

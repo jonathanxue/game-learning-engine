@@ -8,6 +8,13 @@
 #include "TextureManager.hpp"
 
 class AssetManager {
+private:
+	Manager* manager;
+	std::map<std::string, SDL_Texture*> textures;
+	std::map<std::string, Mix_Music*> soundtracks;
+	std::map<std::string, Mix_Chunk*> soundEffects;
+	std::map<std::string, TTF_Font*> fonts;
+
 public:
 	AssetManager(Manager* man);
 	~AssetManager();
@@ -31,11 +38,4 @@ public:
 	//SFX
 	void AddSoundEffect(std::string id, const char* path);
 	Mix_Chunk* GetSoundEffect(std::string id);
-
-private:
-	Manager* manager;
-	std::map<std::string, SDL_Texture*> textures;
-	std::map<std::string, Mix_Music*> soundtracks;
-	std::map<std::string, Mix_Chunk*> soundEffects;
-	std::map<std::string, TTF_Font*> fonts;
 };

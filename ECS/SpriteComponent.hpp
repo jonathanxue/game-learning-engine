@@ -3,11 +3,7 @@
 #include "Components.hpp"
 #include "Animation.hpp"
 
-#include "../TextureManager.hpp"
-#include "../AssetManager.hpp"
-
 #include <map>
-#include "SDL.h"
 
 class SpriteComponent : public Component {
 private:

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../game.hpp"
 #include "Components.hpp"
 
 

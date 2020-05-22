@@ -13,6 +13,9 @@ class AssetManager;
 class ColliderComponent;
 
 class Game {
+private:
+	SDL_Window* window;
+
 public:
 	Game();
 	~Game();
@@ -52,8 +55,6 @@ public:
 	static std::string defaultFont;
 	static SDL_Color defaultFontColour;
 
-private:
-	SDL_Window *window;
 };
 
 //#endif //game_hpp

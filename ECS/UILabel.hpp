@@ -29,7 +29,9 @@ public:
 		SetLabelText(labelText, labelFont);
 	}
 
-	~UILabel(){}
+	~UILabel() {
+		SDL_DestroyTexture(labelTexture);
+	}
 
 	//Everytime we update the texture, we make a new texture
 	//This might be really expensive, so maybe optimize later

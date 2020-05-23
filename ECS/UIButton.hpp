@@ -1,9 +1,10 @@
 #pragma once
 #include "Components.hpp"
-
+#include <functional>
 #include <string>
 
-//TODO: Add button sounds effects
+//TODO: Add function binding
+//https://stackoverflow.com/questions/14189440/c-callback-using-class-member
 class UIButton : public Component {
 private:
 	SDL_Rect position, src;
@@ -55,6 +56,7 @@ public:
 			entity->getComponent<SoundEffectComponent>().play();
 			isPressed = false;
 			printf("so cash\n");
+			//Put callback here
 		}
 	}
 

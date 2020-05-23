@@ -3,7 +3,7 @@
 #include <functional>
 #include <string>
 
-//TODO: Add function binding
+//TODO: Add instance-dependent method binding, prolly have to use std::bind()
 //https://stackoverflow.com/questions/14189440/c-callback-using-class-member
 class UIButton : public Component {
 private:
@@ -11,6 +11,8 @@ private:
 	UILabel btnText;
 	SDL_Texture* btnTexture;
 	bool isPressed = false;
+	//This is what the button does
+	std::function<void()> callBack;
 
 public:
 	UIButton(int xpos, int ypos, int width, int height, std::string buttonText) {
@@ -38,6 +40,11 @@ public:
 		return false;
 	}
 
+	//This kinda has to be called
+	void setCallBack(std::function<void()> callback) {
+		callBack = callback;
+	}
+
 	//Darken button to show button pressed
 	void buttonPressHandler() {
 		//Prevent multiple firing events
@@ -55,8 +62,9 @@ public:
 		if (isPressed) {
 			entity->getComponent<SoundEffectComponent>().play();
 			isPressed = false;
-			printf("so cash\n");
-			//Put callback here
+			if (callBack != NULL) {
+				callBack();
+			}
 		}
 	}
 

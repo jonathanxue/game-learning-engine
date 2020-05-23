@@ -9,6 +9,8 @@
 #include "MusicPlayer.hpp"
 #include <sstream>
 
+#include "UIResources/ButtonCallbacks.hpp"
+
 //Level controllers
 Map* map;
 Background* background;
@@ -45,6 +47,7 @@ Game::Game() {
 
 Game::~Game() {
 }
+
 
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen) {
 	
@@ -111,11 +114,13 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	label.addComponent<UILabel>(10, 10, "TestLabel", defaultFont, defaultFontColour);
 
 	button.addComponent<UIButton>(10, 100, 100, 50, "Test1");
+	button.getComponent<UIButton>().setCallBack(ButtonCallbacks::test1);
 	button.addComponent<SoundEffectComponent>("spellhit", 0);
 	button.addComponent<MouseController>();
 
-	button2.addComponent<SoundEffectComponent>("spellhit", 0);
 	button2.addComponent<UIButton>(10, 200, 100, 50, "Test2");
+	button2.getComponent<UIButton>().setCallBack(ButtonCallbacks::test2);
+	button2.addComponent<SoundEffectComponent>("spellhit", 0);
 	button2.addComponent<MouseController>();
 
 	assets->CreateProjectile(Vector2D(100, 100), Vector2D(2, 0), 500, 2, "projectile");

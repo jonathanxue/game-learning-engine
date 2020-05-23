@@ -30,7 +30,11 @@ public:
 	}
 
 	~UILabel() {
-		SDL_DestroyTexture(labelTexture);
+		//SDL_DestroyTexture(labelTexture);
+	}
+
+	std::string getLabelText() {
+		return labelText;
 	}
 
 	//Everytime we update the texture, we make a new texture

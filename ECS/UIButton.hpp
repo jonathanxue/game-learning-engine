@@ -7,29 +7,15 @@
 //https://stackoverflow.com/questions/14189440/c-callback-using-class-member
 class UIButton : public Component {
 private:
+	TransformComponent* trans;
 	SDL_Rect dest, src;
-	UILabel btnText;
 	SDL_Texture* btnTexture;
 	bool isPressed = false;
 	//This is what the button does
 	std::function<void()> callBack;
 
 public:
-	UIButton(int xpos, int ypos, int width, int height, std::string buttonText) {
-		dest.x = xpos;
-		dest.y = ypos;
-		dest.w = width;
-		dest.h = height;
-
-		src.x = src.y = 0;
-		src.h = 32;
-		src.w = 32;
-
-		//Set font to default font
-		btnText = UILabel::UILabel(xpos, ypos, buttonText, Game::defaultFont, Game::defaultFontColour);
-		btnText.updateLabelPos(static_cast<int>(xpos + dest.w / 2), static_cast<int>(ypos + dest.h / 2));
-		btnTexture = Game::assets->GetTexture("button_default");
-	}
+	UIButton() {}
 
 	~UIButton() {}
 
@@ -38,6 +24,33 @@ public:
 			return true;
 		}
 		return false;
+	}
+
+	void init() override {
+		btnTexture = Game::assets->GetTexture("button_default");
+		trans = &entity->getComponent<TransformComponent>();
+
+		//Transform component dictates all
+		if (trans != NULL) {
+			dest.x = static_cast<int>(trans->position.x);
+			dest.y = static_cast<int>(trans->position.y);
+			dest.w = static_cast<int>(trans->width);
+			dest.h = static_cast<int>(trans->height);
+		}
+		else {
+			dest.x = 0;
+			dest.y = 0;
+			dest.w = 0;
+			dest.h = 0;
+		}
+
+		src.x = src.y = 0;
+		src.h = 32;
+		src.w = 32;
+	}
+
+	void draw() override {
+		TextureManager::Draw(btnTexture, src, dest, SDL_FLIP_NONE);
 	}
 
 	//This kinda has to be called
@@ -66,10 +79,5 @@ public:
 				callBack();
 			}
 		}
-	}
-
-	void draw() override {
-		TextureManager::Draw(btnTexture, src, dest, SDL_FLIP_NONE);
-		btnText.draw();
 	}
 };

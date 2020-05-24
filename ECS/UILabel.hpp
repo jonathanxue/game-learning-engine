@@ -4,6 +4,8 @@
 
 #include <string>
 
+
+
 class UILabel : public Component {
 private:
 	SDL_Rect position;
@@ -11,19 +13,20 @@ private:
 	std::string labelFont;
 	SDL_Color textColour;
 	SDL_Texture* labelTexture;
+	TransformComponent* trans;
+	//Do text allignment
+	int allign = -1; //-1 = top left, 0 = centered
 
 public:
 	UILabel() {
 		position.x = position.y = position.w = position.h = 0;
 		textColour = {0,0,0,0};
+		trans = nullptr;
 		labelTexture = nullptr;
 	}
 
-	UILabel(int xpos, int ypos, std::string text, std::string font, SDL_Color& colour) : labelText(text), labelFont(font), textColour(colour)
+	UILabel(std::string text, std::string font, SDL_Color& colour, int ali) : labelText(text), labelFont(font), textColour(colour), allign(ali)
 	{
-		position.x = xpos;
-		position.y = ypos;
-
 		//Set to null first
 		labelTexture = nullptr;
 		SetLabelText(labelText, labelFont);
@@ -58,10 +61,31 @@ public:
 		this->textColour = newColour;
 	}
 
+	void init() override {
+		trans = &entity->getComponent<TransformComponent>();
+	}
+
 	//Place label in middle of button
-	void updateLabelPos(int xpos, int ypos) {
-		position.x = xpos - static_cast<int>(position.w / 2);
-		position.y = ypos - static_cast<int>(position.h / 2);
+	void update() override {
+		if (trans != NULL) {
+			//Left allignment
+			if (allign == -1) {
+				position.x = static_cast<int>(trans->position.x);
+				position.y = static_cast<int>(trans->position.y);
+			}
+			//Center allignment
+			else if (allign == 0) {
+				position.x = static_cast<int>((trans->position.x + (trans->width / 2)) - (position.w / 2));
+				position.y = static_cast<int>((trans->position.y + (trans->height / 2)) - (position.h / 2));
+			}
+			if (trans->width < position.w) {
+				trans->width = position.w;
+			}
+			if (trans->height < position.h) {
+				trans->height = position.h;
+			}
+		}
+		
 	}
 
 	void draw() override {

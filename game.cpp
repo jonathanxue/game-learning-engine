@@ -111,15 +111,20 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.getComponent<ColliderComponent>().setVisible(false);
 	player.addGroup(groupPlayers);
 
-	label.addComponent<UILabel>(10, 10, "TestLabel", defaultFont, defaultFontColour);
+	label.addComponent<TransformComponent>(10,5);
+	label.addComponent<UILabel>("TestLabel", defaultFont, defaultFontColour, -1);
 
-	button.addComponent<UIButton>(10, 100, 100, 50, "Test1");
+	button.addComponent<TransformComponent>(10, 50, 100, 50, 1);
+	button.addComponent<UIButton>();
+	button.addComponent<UILabel>("Test1", defaultFont, defaultFontColour, 0);
 	button.getComponent<UIButton>().setCallBack(ButtonCallbacks::test1);
 	button.addComponent<SoundEffectComponent>("spellhit", 0);
 	button.addComponent<MouseController>();
 
-	button2.addComponent<UIButton>(10, 200, 100, 50, "Test2");
+	button2.addComponent<TransformComponent>(10, 150, 100, 50, 1);
+	button2.addComponent<UIButton>();
 	button2.getComponent<UIButton>().setCallBack(ButtonCallbacks::test2);
+	button2.addComponent<UILabel>("Test2", defaultFont, defaultFontColour, 0);
 	button2.addComponent<SoundEffectComponent>("spellhit", 0);
 	button2.addComponent<MouseController>();
 

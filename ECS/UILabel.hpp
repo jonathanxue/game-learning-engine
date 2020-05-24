@@ -59,7 +59,7 @@ public:
 	}
 
 	//Place label in middle of button
-	void updateButtonPos(int xpos, int ypos) {
+	void updateLabelPos(int xpos, int ypos) {
 		position.x = xpos - static_cast<int>(position.w / 2);
 		position.y = ypos - static_cast<int>(position.h / 2);
 	}

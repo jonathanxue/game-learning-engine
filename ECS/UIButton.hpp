@@ -7,7 +7,7 @@
 //https://stackoverflow.com/questions/14189440/c-callback-using-class-member
 class UIButton : public Component {
 private:
-	SDL_Rect position, src;
+	SDL_Rect dest, src;
 	UILabel btnText;
 	SDL_Texture* btnTexture;
 	bool isPressed = false;
@@ -16,10 +16,10 @@ private:
 
 public:
 	UIButton(int xpos, int ypos, int width, int height, std::string buttonText) {
-		position.x = xpos;
-		position.y = ypos;
-		position.w = width;
-		position.h = height;
+		dest.x = xpos;
+		dest.y = ypos;
+		dest.w = width;
+		dest.h = height;
 
 		src.x = src.y = 0;
 		src.h = 32;
@@ -27,14 +27,14 @@ public:
 
 		//Set font to default font
 		btnText = UILabel::UILabel(xpos, ypos, buttonText, Game::defaultFont, Game::defaultFontColour);
-		btnText.updateButtonPos(static_cast<int>(xpos + position.w / 2), static_cast<int>(ypos + position.h / 2));
+		btnText.updateLabelPos(static_cast<int>(xpos + dest.w / 2), static_cast<int>(ypos + dest.h / 2));
 		btnTexture = Game::assets->GetTexture("button_default");
 	}
 
 	~UIButton() {}
 
 	bool coordInBounds(int xpos, int ypos) {
-		if (xpos <= (position.x + position.w) && xpos >= position.x && ypos <= (position.y + position.h) && ypos >= position.y) {
+		if (xpos <= (dest.x + dest.w) && xpos >= dest.x && ypos <= (dest.y + dest.h) && ypos >= dest.y) {
 			return true;
 		}
 		return false;
@@ -69,7 +69,7 @@ public:
 	}
 
 	void draw() override {
-		TextureManager::Draw(btnTexture, src, position, SDL_FLIP_NONE);
+		TextureManager::Draw(btnTexture, src, dest, SDL_FLIP_NONE);
 		btnText.draw();
 	}
 };

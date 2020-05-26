@@ -1,9 +1,11 @@
 #pragma once
-#include "EntityComponentSystem.hpp"
 
+//Resources
+#include "EntityComponentSystem.hpp"
 #include "../game.hpp"
 #include "../Vector2D.hpp"
 
+//Managers
 #include "../TextureManager.hpp"
 #include "../AssetManager.hpp"
 
@@ -13,9 +15,13 @@
 #include "TileComponent.hpp"
 #include "SoundEffectComponent.hpp"
 #include "ProjectileComponent.hpp"
+
+//User interface
 #include "UILabel.hpp"
 #include "UIButton.hpp"
-#include "UIPage.hpp"
+#include "UIContent.hpp"
+
+//User input
 #include "MouseController.hpp"
 #include "KeyboardController.hpp"
 //#include "MusicComponent.hpp"

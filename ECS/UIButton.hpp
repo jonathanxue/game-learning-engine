@@ -49,6 +49,15 @@ public:
 		src.w = 32;
 	}
 
+	void update() override {
+		if (trans != NULL) {
+			dest.x = static_cast<int>(trans->position.x);
+			dest.y = static_cast<int>(trans->position.y);
+			dest.w = static_cast<int>(trans->width);
+			dest.h = static_cast<int>(trans->height);
+		}
+	}
+
 	void draw() override {
 		TextureManager::Draw(btnTexture, src, dest, SDL_FLIP_NONE);
 	}

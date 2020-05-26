@@ -78,6 +78,7 @@ public:
 				position.x = static_cast<int>((trans->position.x + (trans->width / 2)) - (position.w / 2));
 				position.y = static_cast<int>((trans->position.y + (trans->height / 2)) - (position.h / 2));
 			}
+			//Update dimensions according to text length
 			if (trans->width < position.w) {
 				trans->width = position.w;
 			}

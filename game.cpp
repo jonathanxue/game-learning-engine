@@ -40,6 +40,7 @@ auto& player(manager.addEntity());
 auto& label(manager.addEntity());
 auto& button(manager.addEntity());
 auto& button2(manager.addEntity());
+auto& ui(manager.addEntity());
 
 Game::Game() {
 	Game::window = nullptr;
@@ -95,6 +96,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	assets->AddFont("Fixedsys", "assets/vgafix.fon", 16);
 	assets->AddTexture("button_default", "assets/button_default.png");
 	assets->AddTexture("button_pressed", "assets/button_pressed.png");
+	assets->AddTexture("menu", "assets/menutexture.png");
 
 	map = new Map("terrain", 3, 32);
 	map->LoadMap("assets/testmap.map",16,10);
@@ -121,6 +123,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	button.addComponent<SoundEffectComponent>("spellhit", 0);
 	button.addComponent<MouseController>();
 
+	ui.addComponent<TransformComponent>(300, 300, 200, 200, 1);
+	ui.addComponent<UIContent>(false);
+	ui.getComponent<UIContent>().addEntity(&button);
+
 	button2.addComponent<TransformComponent>(10, 150, 100, 50, 1);
 	button2.addComponent<UIButton>();
 	button2.getComponent<UIButton>().setCallBack(ButtonCallbacks::test2);
@@ -140,6 +146,7 @@ auto& tiles(manager.getGroup(Game::groupMap)); //Environment tiles that interact
 auto& players(manager.getGroup(Game::groupPlayers)); //Maybe add group for NPCs
 auto& colliders(manager.getGroup(Game::groupColliders));
 auto& projectiles(manager.getGroup(Game::groupProjectiles));
+auto& uiItems(manager.getGroup(Game::groupUI));
 
 void Game::handleEvents() {
 	SDL_PollEvent(&event);
@@ -219,6 +226,7 @@ void Game::render() {
 	label.draw();
 	button.draw();
 	button2.draw();
+	ui.draw();
 	SDL_RenderPresent(renderer);
 }
 

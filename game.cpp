@@ -116,6 +116,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	label.addComponent<TransformComponent>(10,5);
 	label.addComponent<UILabel>("TestLabel", defaultFont, defaultFontColour, -1);
 
+	ButtonCallbacks bck = ButtonCallbacks(1);
+	bck.addEntity(&ui);
+
 	button.addComponent<TransformComponent>(10, 50, 100, 50, 1);
 	button.addComponent<UIButton>();
 	button.addComponent<UILabel>("Test1", defaultFont, defaultFontColour, 0);
@@ -129,7 +132,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	button2.addComponent<TransformComponent>(10, 150, 100, 50, 1);
 	button2.addComponent<UIButton>();
-	button2.getComponent<UIButton>().setCallBack(ButtonCallbacks::test2);
+	button2.getComponent<UIButton>().setCallBack(std::bind(&ButtonCallbacks::test2, bck));
 	button2.addComponent<UILabel>("Test2", defaultFont, defaultFontColour, 0);
 	button2.addComponent<SoundEffectComponent>("spellhit", 0);
 	button2.addComponent<MouseController>();
@@ -224,9 +227,9 @@ void Game::render() {
 		e->draw();
 	}*/
 	label.draw();
-	button.draw();
-	button2.draw();
 	ui.draw();
+	//button.draw();
+	button2.draw();
 	SDL_RenderPresent(renderer);
 }
 

@@ -48,9 +48,21 @@ public:
 	}
 
 	void update() override {
+		if (transform != NULL) {
+			dest.x = static_cast<int>(transform->position.x);
+			dest.y = static_cast<int>(transform->position.y);
+			dest.w = static_cast<int>(transform->width);
+			dest.h = static_cast<int>(transform->height);
+		}
+		else {
+			dest.x = 0;
+			dest.y = 0;
+			dest.w = 0;
+			dest.h = 0;
+		}
 		for (auto& e : entities) {
 			//Move child components with parent
-			e->getComponent<TransformComponent>().velocity = transform->velocity;
+			//Add some sort of delta or something
 			e->update();
 		}
 	}

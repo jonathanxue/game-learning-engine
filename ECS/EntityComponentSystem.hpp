@@ -48,6 +48,7 @@ class Entity {
 private:
 	Manager& manager;
 	bool active = true;
+	int id;
 	std::vector<std::unique_ptr<Component>> components;
 
 	ComponentArray componentArray;

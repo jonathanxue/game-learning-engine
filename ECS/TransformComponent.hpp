@@ -47,4 +47,11 @@ public:
 		position.x += velocity.x * speed;
 		position.y += velocity.y * speed;
 	}
+
+	void updateProperties(float dx, float dy, int dw, int dh) {
+		position.x += dx;
+		position.y += dy;
+		width += dw;
+		height += dh;
+	}
 };

@@ -23,7 +23,6 @@ public:
 	}
 
 	//Memory deallocated somewhere here
-	//std::bind breaks shit here
 	void test2() {
 		TransformComponent* trans = &ent->getComponent<TransformComponent>();
 		trans->position.x += 150;

@@ -8,6 +8,8 @@ private:
 	TransformComponent* transform;
 	SDL_Texture* texture;
 	std::vector<std::unique_ptr<Entity>> entities;
+	Vector2D deltaPos = {0.0f,0.0f};
+	int deltaH = 0, deltaW = 0;
 	bool autoFormat = false;
 public:
 	UIContent() {}
@@ -32,8 +34,8 @@ public:
 		if (transform != NULL) {
 			dest.x = static_cast<int>(transform->position.x);
 			dest.y = static_cast<int>(transform->position.y);
-			dest.w = static_cast<int>(transform->width);
-			dest.h = static_cast<int>(transform->height);
+			dest.w = transform->width;
+			dest.h = transform->height;
 		}
 		else {
 			dest.x = 0;
@@ -49,10 +51,17 @@ public:
 
 	void update() override {
 		if (transform != NULL) {
+
+			//Keep delta to update child components
+			deltaPos.x = static_cast<int>(transform->position.x) - dest.x;
+			deltaPos.y = static_cast<int>(transform->position.y) - dest.y;
+			deltaW = transform->width - dest.w;
+			deltaH = transform->height - dest.h;
+
 			dest.x = static_cast<int>(transform->position.x);
 			dest.y = static_cast<int>(transform->position.y);
-			dest.w = static_cast<int>(transform->width);
-			dest.h = static_cast<int>(transform->height);
+			dest.w = transform->width;
+			dest.h = transform->height;
 		}
 		else {
 			dest.x = 0;
@@ -62,8 +71,8 @@ public:
 		}
 		for (auto& e : entities) {
 			//Move child components with parent
-			//Add some sort of delta or something
-			e->update();
+			e->getComponent<TransformComponent>().updateProperties(deltaPos.x, deltaPos.y, deltaW, deltaH);
+			e->update(); //This is redundant but reduces latency between updates of diff entities, TODO: Refactor so this isn't useful
 		}
 	}
 

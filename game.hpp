@@ -36,7 +36,8 @@ public:
 		groupMap,
 		groupPlayers,
 		groupColliders,
-		groupProjectiles
+		groupProjectiles,
+		groupUI
 	};
 
 	enum class gameState {

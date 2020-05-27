@@ -2,6 +2,7 @@
 #include "Components.hpp"
 #include <functional>
 #include <string>
+#include "../UIResources/ButtonCallbacks.hpp"
 
 //TODO: Add instance-dependent method binding, prolly have to use std::bind()
 //https://stackoverflow.com/questions/14189440/c-callback-using-class-member
@@ -47,6 +48,15 @@ public:
 		src.x = src.y = 0;
 		src.h = 32;
 		src.w = 32;
+	}
+
+	void update() override {
+		if (trans != NULL) {
+			dest.x = static_cast<int>(trans->position.x);
+			dest.y = static_cast<int>(trans->position.y);
+			dest.w = static_cast<int>(trans->width);
+			dest.h = static_cast<int>(trans->height);
+		}
 	}
 
 	void draw() override {

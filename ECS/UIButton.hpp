@@ -4,8 +4,6 @@
 #include <string>
 #include "../UIResources/ButtonCallbacks.hpp"
 
-//TODO: Add instance-dependent method binding, prolly have to use std::bind()
-//https://stackoverflow.com/questions/14189440/c-callback-using-class-member
 class UIButton : public Component {
 private:
 	TransformComponent* trans;

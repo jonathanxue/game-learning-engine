@@ -109,12 +109,14 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.addComponent<TransformComponent>(4);
 	player.addComponent<SpriteComponent>("player", true);
 	player.addComponent<ColliderComponent>("player");
-	player.addComponent<KeyboardController>();
+	//player.addComponent<KeyboardController>();
 	player.getComponent<ColliderComponent>().setVisible(false);
 	player.addGroup(groupPlayers);
 
 	label.addComponent<TransformComponent>(10,5);
 	label.addComponent<UILabel>("TestLabel", defaultFont, defaultFontColour, -1);
+	label.addComponent<TypingController>();
+	//label.getComponent<TypingController>().enableTyping();
 
 	ButtonCallbacks bck = ButtonCallbacks(1);
 	bck.addEntity(&ui);
@@ -167,9 +169,9 @@ void Game::update() {
 	SDL_Rect playerCol = player.getComponent<ColliderComponent>().collider;
 	Vector2D playerPos = player.getComponent<TransformComponent>().position;
 
-	std::stringstream ss;
-	ss << "Player position: " << playerPos;
-	label.getComponent<UILabel>().SetLabelText(ss.str(), "Fixedsys");
+	//std::stringstream ss;
+	//ss << "Player position: " << playerPos;
+	//label.getComponent<UILabel>().SetLabelText(ss.str(), "Fixedsys");
 
 	manager.refresh();
 	manager.update();

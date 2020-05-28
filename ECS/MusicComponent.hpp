@@ -2,9 +2,7 @@
 
 #include "Components.hpp"
 
-//Maybe use an independent class to play music
-//Depends on if we can play multiple songs at once
-//If cant, we do that, if not, keep this implementation
+//Not in use right now
 class MusicComponent : public Component {
 private:
 	Mix_Music* song;

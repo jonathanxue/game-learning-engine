@@ -20,10 +20,12 @@
 #include "UILabel.hpp"
 #include "UIButton.hpp"
 #include "UIContent.hpp"
+#include "UITextBox.hpp"
 
 //User input
 #include "MouseController.hpp"
 #include "KeyboardController.hpp"
+#include "TypingController.hpp"
 //#include "MusicComponent.hpp"
 
 

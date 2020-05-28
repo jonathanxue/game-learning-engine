@@ -16,6 +16,7 @@ private:
 	TransformComponent* trans;
 	//Do text allignment
 	int allign = -1; //-1 = top left, 0 = centered
+	int minWidth = 50; //This makes the label clickable even if empty
 
 public:
 	UILabel() {
@@ -40,8 +41,6 @@ public:
 		return labelText;
 	}
 
-	//Everytime we update the texture, we make a new texture
-	//This might be really expensive, so maybe optimize later
 	void SetLabelText(const std::string& text, const std::string& font) {
 		this->labelText = text;
 		this->labelFont = font;
@@ -84,6 +83,9 @@ public:
 			}
 			if (trans->height < position.h) {
 				trans->height = position.h;
+			}
+			if (trans->width < minWidth) {
+				trans->width = minWidth;
 			}
 		}
 		

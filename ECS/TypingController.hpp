@@ -6,7 +6,9 @@ class TypingController : public Component {
 private:
 	std::string inputText;
 	std::string oldText;
-	bool renderText = false;
+	bool renderText = false; //Update flag
+	bool keyPressUpdate = false; //This flag tells us where the latest update came from. True means it came from SDL_KEYDOWN, False means it came from SDL_TEXTINPUT
+	bool isEnabled = true; //Enable flag, might not be needed
 	UILabel* label;
 public:
 
@@ -15,47 +17,62 @@ public:
 	}
 	~TypingController() {}
 
+	//Start accepting SDL_TEXTINPUT Events
+	//Save a copy of the original text
+	//Start editing the original text as well
 	void enableTyping() {
 		SDL_StartTextInput();
-		oldText = inputText;
+		if (label != NULL) {
+			oldText = label->getLabelText();
+		}
+		inputText = oldText;
+		Game::inputTextBuffer = oldText;
 	}
 
 	void disableTyping() {
 		SDL_StopTextInput();
+		Game::inputTextBuffer = "";
 	}
 
 	void init() override {
 		label = &entity->getComponent<UILabel>();
 	}
 
-	//https://wiki.libsdl.org/Tutorials/TextInput
-	//http://lazyfoo.net/tutorials/SDL/32_text_input_and_clipboard_handling/index.php
 	void update() override {
-		//Need this loop to capture all key inputs
-		while (SDL_PollEvent(&Game::event) != 0) {
+		//Game::event will not update if there is no new event. The old event will still trigger changes if not for this check
+		if (Game::eventResult != 0) {
 			if (Game::event.type == SDL_KEYDOWN) {
 				SDL_Keycode key = Game::event.key.keysym.sym;
+
+				//Backspace
 				if (key == SDLK_BACKSPACE && inputText.length() > 0) {
 					inputText.pop_back();
 					renderText = true;
 				}
+				//Copy
 				else if (key == SDLK_c && SDL_GetModState() & KMOD_CTRL) {
 					SDL_SetClipboardText(inputText.c_str());
 				}
+				//Paste
 				else if (key == SDLK_v && SDL_GetModState() & KMOD_CTRL) {
 					inputText = SDL_GetClipboardText();
 					renderText = true;
 				}
+				//Confirm changes
 				else if (key == SDLK_KP_ENTER) {
 					renderText = true; //Render just incase
 					disableTyping();
+					oldText = inputText;
 					//fire other events
 				}
+				//Cancel changes
 				else if (key == SDLK_ESCAPE) {
+					renderText = true;
 					inputText = oldText;
 					disableTyping();
 				}
 			}
+			//General text input
 			else if (Game::event.type == SDL_TEXTINPUT) {
 				if (!(SDL_GetModState() & KMOD_CTRL && (Game::event.text.text[0] == 'c' || Game::event.text.text[0] == 'C'
 					|| Game::event.text.text[0] == 'v' || Game::event.text.text[0] == 'V'))) {
@@ -64,9 +81,12 @@ public:
 				}
 			}
 		}
+
+		//Update label if there are changes
 		if (renderText) {
 			if (label != NULL) {
 				label->SetLabelText(inputText, Game::defaultFont); //Maybe change to allow for variable font
+				keyPressUpdate = false;
 				renderText = false;
 			}
 		}

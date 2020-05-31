@@ -48,11 +48,14 @@ public:
 
 	static SDL_Renderer* renderer;
 	static SDL_Event event;
+	static int eventResult;
 	static bool isRunning;
 
 	static SDL_Rect camera;
 	static AssetManager* assets;
 	static gameState state;
+
+	static std::string inputTextBuffer;
 
 	static std::string defaultFont;
 	static SDL_Color defaultFontColour;

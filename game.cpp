@@ -19,6 +19,7 @@ Manager manager;
 //engine components
 SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
+int Game::eventResult = 0; //event can't be null, so we use this
 SDL_Rect Game::camera = { 0,0,800,640 };
 
 //Asset manager
@@ -34,6 +35,7 @@ bool Game::isRunning = false;
 
 //Other globals
 MusicPlayer* musicplayer;
+std::string Game::inputTextBuffer = "";
 
 //Level entities
 auto& player(manager.addEntity());
@@ -116,7 +118,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	label.addComponent<TransformComponent>(10,5);
 	label.addComponent<UILabel>("TestLabel", defaultFont, defaultFontColour, -1);
 	label.addComponent<TypingController>();
-	//label.getComponent<TypingController>().enableTyping();
+	label.getComponent<TypingController>().enableTyping();
 
 	ButtonCallbacks bck = ButtonCallbacks(1);
 	bck.addEntity(&ui);
@@ -154,7 +156,7 @@ auto& projectiles(manager.getGroup(Game::groupProjectiles));
 auto& uiItems(manager.getGroup(Game::groupUI));
 
 void Game::handleEvents() {
-	SDL_PollEvent(&event);
+	eventResult = SDL_PollEvent(&event);
 	switch (event.type) {
 		case SDL_QUIT:
 			isRunning = false;
@@ -230,7 +232,6 @@ void Game::render() {
 	}*/
 	label.draw();
 	ui.draw();
-	//button.draw();
 	button2.draw();
 	SDL_RenderPresent(renderer);
 }

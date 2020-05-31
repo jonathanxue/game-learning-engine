@@ -35,7 +35,6 @@ bool Game::isRunning = false;
 
 //Other globals
 MusicPlayer* musicplayer;
-std::string Game::inputTextBuffer = "";
 
 //Level entities
 auto& player(manager.addEntity());

@@ -55,11 +55,7 @@ public:
 	static AssetManager* assets;
 	static gameState state;
 
-	static std::string inputTextBuffer;
-
 	static std::string defaultFont;
 	static SDL_Color defaultFontColour;
 
 };
-
-//#endif //game_hpp

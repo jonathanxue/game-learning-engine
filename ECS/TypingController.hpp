@@ -26,12 +26,10 @@ public:
 			oldText = label->getLabelText();
 		}
 		inputText = oldText;
-		Game::inputTextBuffer = oldText;
 	}
 
 	void disableTyping() {
 		SDL_StopTextInput();
-		Game::inputTextBuffer = "";
 	}
 
 	void init() override {
@@ -55,7 +53,7 @@ public:
 				}
 				//Paste
 				else if (key == SDLK_v && SDL_GetModState() & KMOD_CTRL) {
-					inputText = SDL_GetClipboardText();
+					inputText += SDL_GetClipboardText();
 					renderText = true;
 				}
 				//Confirm changes

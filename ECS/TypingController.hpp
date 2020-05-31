@@ -17,6 +17,10 @@ public:
 	}
 	~TypingController() {}
 
+	bool checkEnabled() {
+		return isEnabled;
+	}
+
 	//Start accepting SDL_TEXTINPUT Events
 	//Save a copy of the original text
 	//Start editing the original text as well
@@ -34,11 +38,12 @@ public:
 
 	void init() override {
 		label = &entity->getComponent<UILabel>();
+		disableTyping();
 	}
 
 	void update() override {
 		//Game::event will not update if there is no new event. The old event will still trigger changes if not for this check
-		if (Game::eventResult != 0) {
+		if (Game::eventResult == 0) { return; }
 			if (Game::event.type == SDL_KEYDOWN) {
 				SDL_Keycode key = Game::event.key.keysym.sym;
 
@@ -57,7 +62,7 @@ public:
 					renderText = true;
 				}
 				//Confirm changes
-				else if (key == SDLK_KP_ENTER) {
+				else if (key == SDLK_KP_ENTER || key == SDLK_RETURN) {
 					renderText = true; //Render just incase
 					disableTyping();
 					oldText = inputText;
@@ -78,7 +83,6 @@ public:
 					renderText = true;
 				}
 			}
-		}
 
 		//Update label if there are changes
 		if (renderText) {

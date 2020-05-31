@@ -13,7 +13,6 @@ public:
 	ButtonCallbacks(int i) { fuk = 1; }
 	~ButtonCallbacks() {}
 
-	//Memory properly allocated here
 	void addEntity(Entity* entt) {
 		ent = entt;
 	}
@@ -22,7 +21,6 @@ public:
 		printf("Test 1 fired\n");
 	}
 
-	//Memory deallocated somewhere here
 	void test2() {
 		TransformComponent* trans = &ent->getComponent<TransformComponent>();
 		trans->position.x += 150;

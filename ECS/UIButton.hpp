@@ -18,13 +18,6 @@ public:
 
 	~UIButton() {}
 
-	bool coordInBounds(int xpos, int ypos) {
-		if (xpos <= (dest.x + dest.w) && xpos >= dest.x && ypos <= (dest.y + dest.h) && ypos >= dest.y) {
-			return true;
-		}
-		return false;
-	}
-
 	void init() override {
 		btnTexture = Game::assets->GetTexture("button_default");
 		trans = &entity->getComponent<TransformComponent>();
@@ -33,8 +26,8 @@ public:
 		if (trans != NULL) {
 			dest.x = static_cast<int>(trans->position.x);
 			dest.y = static_cast<int>(trans->position.y);
-			dest.w = static_cast<int>(trans->width);
-			dest.h = static_cast<int>(trans->height);
+			dest.w = trans->width;
+			dest.h = trans->height;
 		}
 		else {
 			dest.x = 0;
@@ -52,8 +45,8 @@ public:
 		if (trans != NULL) {
 			dest.x = static_cast<int>(trans->position.x);
 			dest.y = static_cast<int>(trans->position.y);
-			dest.w = static_cast<int>(trans->width);
-			dest.h = static_cast<int>(trans->height);
+			dest.w = trans->width;
+			dest.h = trans->height;
 		}
 	}
 

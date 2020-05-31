@@ -117,7 +117,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	label.addComponent<TransformComponent>(10,5);
 	label.addComponent<UILabel>("TestLabel", defaultFont, defaultFontColour, -1);
 	label.addComponent<TypingController>();
-	label.getComponent<TypingController>().enableTyping();
+	label.addComponent<MouseController>();
+	//label.getComponent<TypingController>().enableTyping();
 
 	ButtonCallbacks bck = ButtonCallbacks(1);
 	bck.addEntity(&ui);
@@ -154,6 +155,7 @@ auto& colliders(manager.getGroup(Game::groupColliders));
 auto& projectiles(manager.getGroup(Game::groupProjectiles));
 auto& uiItems(manager.getGroup(Game::groupUI));
 
+//Main event listener
 void Game::handleEvents() {
 	eventResult = SDL_PollEvent(&event);
 	switch (event.type) {

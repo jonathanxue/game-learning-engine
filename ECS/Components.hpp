@@ -23,9 +23,9 @@
 #include "UITextBox.hpp"
 
 //User input
+#include "TypingController.hpp"
 #include "MouseController.hpp"
 #include "KeyboardController.hpp"
-#include "TypingController.hpp"
 //#include "MusicComponent.hpp"
 
 

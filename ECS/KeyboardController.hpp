@@ -13,6 +13,7 @@ public:
 	}
 
 	void update() override {
+		if (Game::eventResult == 0) { return; }
 		if (Game::event.type == SDL_KEYDOWN) {
 			switch (Game::event.key.keysym.sym) {
 			case SDLK_w:

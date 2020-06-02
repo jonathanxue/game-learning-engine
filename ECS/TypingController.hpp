@@ -7,7 +7,6 @@ private:
 	std::string inputText;
 	std::string oldText;
 	bool renderText = false; //Update flag
-	bool keyPressUpdate = false; //This flag tells us where the latest update came from. True means it came from SDL_KEYDOWN, False means it came from SDL_TEXTINPUT
 	bool isEnabled = true; //Enable flag, might not be needed
 	UILabel* label;
 public:
@@ -38,7 +37,7 @@ public:
 
 	void init() override {
 		label = &entity->getComponent<UILabel>();
-		disableTyping();
+		disableTyping(); //Default is enabled
 	}
 
 	void update() override {
@@ -88,7 +87,7 @@ public:
 		if (renderText) {
 			if (label != NULL) {
 				label->SetLabelText(inputText, Game::defaultFont); //Maybe change to allow for variable font
-				keyPressUpdate = false;
+				//label->HighlightLabelText(inputText, Game::defaultFont);
 				renderText = false;
 			}
 		}

@@ -10,9 +10,7 @@ private:
 	TransformComponent* transform;
 public:
 
-	~MouseController() {
-		free(button);
-	}
+	~MouseController() {}
 
 	void init() override {
 		button = &entity->getComponent<UIButton>();

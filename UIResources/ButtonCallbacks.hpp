@@ -7,10 +7,8 @@
 class ButtonCallbacks {
 private:
 	Entity* ent;
-	int fuk = -1;
 public:
 	ButtonCallbacks() {}
-	ButtonCallbacks(int i) { fuk = 1; }
 	~ButtonCallbacks() {}
 
 	void addEntity(Entity* entt) {

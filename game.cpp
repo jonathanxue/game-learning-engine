@@ -28,6 +28,7 @@ AssetManager* Game::assets = new AssetManager(&manager);
 //Default values
 std::string Game::defaultFont = "Fixedsys";
 SDL_Color Game::defaultFontColour = { 255,255,255,255 }; //White
+SDL_Color Game::defaultFontBackgroundColour = { 0,0,0,0 }; //Black
 
 //Gamestate stuff
 Game::gameState Game::state = Game::gameState::game_running;
@@ -110,7 +111,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.addComponent<TransformComponent>(4);
 	player.addComponent<SpriteComponent>("player", true);
 	player.addComponent<ColliderComponent>("player");
-	//player.addComponent<KeyboardController>();
+	player.addComponent<KeyboardController>();
 	player.getComponent<ColliderComponent>().setVisible(false);
 	player.addGroup(groupPlayers);
 
@@ -120,7 +121,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	label.addComponent<MouseController>();
 	//label.getComponent<TypingController>().enableTyping();
 
-	ButtonCallbacks bck = ButtonCallbacks(1);
+	ButtonCallbacks bck = ButtonCallbacks();
 	bck.addEntity(&ui);
 
 	button.addComponent<TransformComponent>(10, 50, 100, 50, 1);
@@ -144,8 +145,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	assets->CreateProjectile(Vector2D(100, 100), Vector2D(2, 0), 500, 2, "projectile");
 	assets->CreateProjectile(Vector2D(100, 200), Vector2D(2, 0), 500, 2, "projectile");
 	assets->CreateProjectile(Vector2D(100, 300), Vector2D(2, 0), 500, 2, "projectile");
-	//assets->CreateProjectile(Vector2D(100, 400), Vector2D(2, 0), 500, 2, "projectile");
-	//assets->CreateProjectile(Vector2D(100, 500), Vector2D(2, 0), 500, 2, "projectile");
+	assets->CreateProjectile(Vector2D(100, 400), Vector2D(2, 0), 500, 2, "projectile");
+	assets->CreateProjectile(Vector2D(100, 500), Vector2D(2, 0), 500, 2, "projectile");
 }
 
 auto& backgrounds(manager.getGroup(Game::groupBackgrounds)); //Background of window

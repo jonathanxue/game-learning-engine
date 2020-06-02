@@ -57,5 +57,6 @@ public:
 
 	static std::string defaultFont;
 	static SDL_Color defaultFontColour;
+	static SDL_Color defaultFontBackgroundColour;
 
 };

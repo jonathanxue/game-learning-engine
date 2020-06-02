@@ -11,12 +11,18 @@ private:
 	Vector2D deltaPos = {0.0f,0.0f};
 	int deltaH = 0, deltaW = 0;
 	bool autoFormat = false;
+
 public:
 	UIContent() {}
 	UIContent(bool format) : autoFormat(format) {
 
 	}
-	~UIContent() {}
+	~UIContent() {
+		
+		for (auto& ent : entities) {
+			ent.release();
+		}
+	}
 
 	void addEntity(Entity* ent) {
 		if (transform != NULL) {

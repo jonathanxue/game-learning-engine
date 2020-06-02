@@ -12,6 +12,7 @@ private:
 	std::string labelText;
 	std::string labelFont;
 	SDL_Color textColour;
+	SDL_Color textBackground; //for highlighted text
 	SDL_Texture* labelTexture;
 	TransformComponent* trans;
 	//Do text allignment
@@ -21,7 +22,8 @@ private:
 public:
 	UILabel() {
 		position.x = position.y = position.w = position.h = 0;
-		textColour = {0,0,0,0};
+		textColour = {255,255,255,255};
+		textBackground = { 0,0,0,0, };
 		trans = nullptr;
 		labelTexture = nullptr;
 	}
@@ -30,6 +32,7 @@ public:
 	{
 		//Set to null first
 		labelTexture = nullptr;
+		textBackground = { 0,0,0,0 };
 		SetLabelText(labelText, labelFont);
 	}
 
@@ -41,6 +44,7 @@ public:
 		return labelText;
 	}
 
+	//Create texture for normal text
 	void SetLabelText(const std::string& text, const std::string& font) {
 		this->labelText = text;
 		this->labelFont = font;
@@ -53,6 +57,21 @@ public:
 		labelTexture = SDL_CreateTextureFromSurface(Game::renderer, surf);
 		SDL_FreeSurface(surf);
 
+		SDL_QueryTexture(labelTexture, nullptr, nullptr, &position.w, &position.h);
+	}
+
+	//Create texture for highlighted text
+	void HighlightLabelText(const std::string& text, const std::string& font) {
+		this->labelText = text;
+		this->labelFont = font;
+
+		if (this->labelTexture != nullptr) {
+			SDL_DestroyTexture(this->labelTexture);
+		}
+
+		SDL_Surface* surf = TTF_RenderText_Shaded(Game::assets->GetFont(labelFont), labelText.c_str(), textBackground,textColour);
+		labelTexture = SDL_CreateTextureFromSurface(Game::renderer, surf);
+		SDL_FreeSurface(surf);
 		SDL_QueryTexture(labelTexture, nullptr, nullptr, &position.w, &position.h);
 	}
 

@@ -57,6 +57,7 @@ private:
 
 public:
 	Entity(Manager& mManager) : manager(mManager) {}
+
 	void update() {
 		for (auto& c : components) c->update();
 	}

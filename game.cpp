@@ -127,7 +127,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	ButtonCallbacks bck = ButtonCallbacks();
 	bck.addEntity(&ui);
 
-	slider.addComponent<TransformComponent>(500, 700, 100, 15, 1);
+	slider.addComponent<TransformComponent>(500, 700, 150, 30, 1);
+	slider.addComponent<UILabel>("0000", defaultFont, defaultFontColour, 0);
 	slider.addComponent<UISlider>();
 	slider.addComponent<MouseController>();
 
@@ -183,10 +184,6 @@ void Game::update() {
 	//std::stringstream ss;
 	//ss << "Player position: " << playerPos;
 	//label.getComponent<UILabel>().SetLabelText(ss.str(), "Fixedsys");
-	float f = slider.getComponent<UISlider>().getValue();
-	std::stringstream ss;
-	ss << f;
-	label.getComponent<UILabel>().SetLabelText(ss.str(), "Fixedsys");
 
 	manager.refresh();
 	manager.update();

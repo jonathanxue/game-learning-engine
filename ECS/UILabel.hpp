@@ -18,6 +18,7 @@ private:
 	//Do text allignment
 	int allign = -1; //-1 = top left, 0 = centered
 	int minWidth = 50; //This makes the label clickable even if empty
+	bool detached = false; //This will bind/unbind the label to the transform component
 
 public:
 	UILabel() {
@@ -75,6 +76,20 @@ public:
 		SDL_QueryTexture(labelTexture, nullptr, nullptr, &position.w, &position.h);
 	}
 
+	void updateLabelText(const std::string& text) {
+		this->labelText = text;
+
+		if (this->labelTexture != nullptr) {
+			SDL_DestroyTexture(this->labelTexture);
+		}
+
+		SDL_Surface* surf = TTF_RenderText_Blended(Game::assets->GetFont(labelFont), labelText.c_str(), textColour);
+		labelTexture = SDL_CreateTextureFromSurface(Game::renderer, surf);
+		SDL_FreeSurface(surf);
+
+		SDL_QueryTexture(labelTexture, nullptr, nullptr, &position.w, &position.h);
+	}
+
 	void SetFontColor(SDL_Color newColour) {
 		this->textColour = newColour;
 	}
@@ -86,25 +101,30 @@ public:
 	//Place label in middle of button
 	void update() override {
 		if (trans != NULL) {
-			//Left allignment
-			if (allign == -1) {
-				position.x = static_cast<int>(trans->position.x);
-				position.y = static_cast<int>(trans->position.y);
+			if (detached) {
+
 			}
-			//Center allignment
-			else if (allign == 0) {
-				position.x = static_cast<int>((trans->position.x + (trans->width / 2)) - (position.w / 2));
-				position.y = static_cast<int>((trans->position.y + (trans->height / 2)) - (position.h / 2));
-			}
-			//Update dimensions according to text length
-			if (trans->width < position.w) {
-				trans->width = position.w;
-			}
-			if (trans->height < position.h) {
-				trans->height = position.h;
-			}
-			if (trans->width < minWidth) {
-				trans->width = minWidth;
+			else {
+				//Left allignment
+				if (allign == -1) {
+					position.x = static_cast<int>(trans->position.x);
+					position.y = static_cast<int>(trans->position.y);
+				}
+				//Center allignment
+				else if (allign == 0) {
+					position.x = static_cast<int>((trans->position.x + (trans->width / 2)) - (position.w / 2));
+					position.y = static_cast<int>((trans->position.y + (trans->height / 2)) - (position.h / 2));
+				}
+				//Update dimensions according to text length
+				if (trans->width < position.w) {
+					trans->width = position.w;
+				}
+				if (trans->height < position.h) {
+					trans->height = position.h;
+				}
+				if (trans->width < minWidth) {
+					trans->width = minWidth;
+				}
 			}
 		}
 		

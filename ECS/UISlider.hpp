@@ -2,6 +2,7 @@
 
 #include "Components.hpp"
 #include "ComponentHelper.hpp"
+#include <sstream>
 
 class UISlider : public Component {
 private:
@@ -9,6 +10,7 @@ private:
 	SDL_Texture* fillTexture;
 	SDL_Rect src, destFill, destEmpty;
 	TransformComponent* transform; //
+	UILabel* label;
 	bool inFocus;
 	float percentValue;
 public:
@@ -40,12 +42,13 @@ public:
 		}
 		else {
 			//Move to cursor position
-			percentValue = (mousexpos / transform->width) * 100;
+			percentValue = static_cast<int>((mousexpos / transform->width) * 100);
 		}
 	}
 
 	void init() override {
 		transform = &entity->getComponent<TransformComponent>();
+		label = &entity->getComponent<UILabel>();
 		emptyTexture = Game::assets->GetTexture("slider_empty");
 		fillTexture = Game::assets->GetTexture("slider_full");
 		percentValue = 50.0f;
@@ -66,10 +69,16 @@ public:
 
 		//Update fill rect
 		destFill.w = static_cast<int>((percentValue * destEmpty.w) / 100); //Fills the specified 
+		if (label != NULL) {
+			std::stringstream ss;
+			ss << percentValue;
+			label->updateLabelText(ss.str());
+		}
 	}
 
 	void draw() override {
 		TextureManager::Draw(emptyTexture, src, destEmpty, SDL_FLIP_NONE);
 		TextureManager::Draw(fillTexture, src, destFill, SDL_FLIP_NONE);
+		label->draw();
 	}
 };

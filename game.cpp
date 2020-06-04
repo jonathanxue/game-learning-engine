@@ -43,6 +43,7 @@ auto& label(manager.addEntity());
 auto& button(manager.addEntity());
 auto& button2(manager.addEntity());
 auto& ui(manager.addEntity());
+auto& slider(manager.addEntity());
 
 Game::Game() {
 	Game::window = nullptr;
@@ -95,10 +96,12 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	assets->AddTexture("collider", "assets/hitbox.png");
 
 	//UI textures
-	assets->AddFont("Fixedsys", "assets/vgafix.fon", 16);
-	assets->AddTexture("button_default", "assets/button_default.png");
-	assets->AddTexture("button_pressed", "assets/button_pressed.png");
-	assets->AddTexture("menu", "assets/menutexture.png");
+	assets->AddFont("Fixedsys", "assets/UITextures/vgafix.fon", 16);
+	assets->AddTexture("button_default", "assets/UITextures/button_default.png");
+	assets->AddTexture("button_pressed", "assets/UITextures/button_pressed.png");
+	assets->AddTexture("menu", "assets/UITextures/menutexture.png");
+	assets->AddTexture("slider_empty", "assets/UITextures/sliderEmpty.png");
+	assets->AddTexture("slider_full", "assets/UITextures/sliderFull.png");
 
 	map = new Map("terrain", 3, 32);
 	map->LoadMap("assets/testmap.map",16,10);
@@ -123,6 +126,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	ButtonCallbacks bck = ButtonCallbacks();
 	bck.addEntity(&ui);
+
+	slider.addComponent<TransformComponent>(500, 700, 100, 15, 1);
+	slider.addComponent<UISlider>();
+	slider.addComponent<MouseController>();
 
 	button.addComponent<TransformComponent>(10, 50, 100, 50, 1);
 	button.addComponent<UIButton>();
@@ -176,6 +183,10 @@ void Game::update() {
 	//std::stringstream ss;
 	//ss << "Player position: " << playerPos;
 	//label.getComponent<UILabel>().SetLabelText(ss.str(), "Fixedsys");
+	float f = slider.getComponent<UISlider>().getValue();
+	std::stringstream ss;
+	ss << f;
+	label.getComponent<UILabel>().SetLabelText(ss.str(), "Fixedsys");
 
 	manager.refresh();
 	manager.update();
@@ -235,6 +246,7 @@ void Game::render() {
 	label.draw();
 	ui.draw();
 	button2.draw();
+	slider.draw();
 	SDL_RenderPresent(renderer);
 }
 

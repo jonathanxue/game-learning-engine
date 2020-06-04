@@ -21,6 +21,7 @@
 #include "UIButton.hpp"
 #include "UIContent.hpp"
 #include "UITextBox.hpp"
+#include "UISlider.hpp"
 
 //User input
 #include "TypingController.hpp"

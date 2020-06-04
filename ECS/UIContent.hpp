@@ -1,6 +1,7 @@
 #pragma once
 #include "Components.hpp"
 #include <memory>
+#include "ComponentHelper.hpp"
 
 class UIContent : public Component {
 private:
@@ -38,16 +39,7 @@ public:
 		transform = &entity->getComponent<TransformComponent>();
 		//Transform component dictates all
 		if (transform != NULL) {
-			dest.x = static_cast<int>(transform->position.x);
-			dest.y = static_cast<int>(transform->position.y);
-			dest.w = transform->width;
-			dest.h = transform->height;
-		}
-		else {
-			dest.x = 0;
-			dest.y = 0;
-			dest.w = 0;
-			dest.h = 0;
+			ComponentHelper::UpdateRectangleToTransform(dest, *transform);
 		}
 
 		src.x = src.y = 0;
@@ -57,24 +49,15 @@ public:
 
 	void update() override {
 		if (transform != NULL) {
-
 			//Keep delta to update child components
 			deltaPos.x = static_cast<int>(transform->position.x) - dest.x;
 			deltaPos.y = static_cast<int>(transform->position.y) - dest.y;
 			deltaW = transform->width - dest.w;
 			deltaH = transform->height - dest.h;
 
-			dest.x = static_cast<int>(transform->position.x);
-			dest.y = static_cast<int>(transform->position.y);
-			dest.w = transform->width;
-			dest.h = transform->height;
+			ComponentHelper::UpdateRectangleToTransform(dest, *transform);
 		}
-		else {
-			dest.x = 0;
-			dest.y = 0;
-			dest.w = 0;
-			dest.h = 0;
-		}
+
 		for (auto& e : entities) {
 			//Move child components with parent
 			e->getComponent<TransformComponent>().updateProperties(deltaPos.x, deltaPos.y, deltaW, deltaH);

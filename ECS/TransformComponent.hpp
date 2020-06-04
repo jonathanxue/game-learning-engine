@@ -24,11 +24,18 @@ public:
 		scale = sc;
 	}
 
+	/*
+	* Args float x, float y
+	*/
 	TransformComponent(float x, float y) {
 		position.x = x;
 		position.y = y;
 	}
 
+	/*
+	* Comprehensive constructor
+	* Args float x, float y, int w, int h, int sc
+	*/
 	TransformComponent(float x, float y, int w, int h, int sc) {
 		position.x = x;
 		position.y = y;

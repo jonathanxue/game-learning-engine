@@ -1,8 +1,8 @@
 #pragma once
 #include "Components.hpp"
 #include <functional>
-#include <string>
 #include "../UIResources/ButtonCallbacks.hpp"
+#include "ComponentHelper.hpp"
 
 class UIButton : public Component {
 private:
@@ -24,16 +24,8 @@ public:
 
 		//Transform component dictates all
 		if (trans != NULL) {
-			dest.x = static_cast<int>(trans->position.x);
-			dest.y = static_cast<int>(trans->position.y);
-			dest.w = trans->width;
-			dest.h = trans->height;
-		}
-		else {
-			dest.x = 0;
-			dest.y = 0;
-			dest.w = 0;
-			dest.h = 0;
+			ComponentHelper::UpdateRectangleToTransform(dest, *trans);
+
 		}
 
 		src.x = src.y = 0;
@@ -43,10 +35,7 @@ public:
 
 	void update() override {
 		if (trans != NULL) {
-			dest.x = static_cast<int>(trans->position.x);
-			dest.y = static_cast<int>(trans->position.y);
-			dest.w = trans->width;
-			dest.h = trans->height;
+			ComponentHelper::UpdateRectangleToTransform(dest, *trans);
 		}
 	}
 

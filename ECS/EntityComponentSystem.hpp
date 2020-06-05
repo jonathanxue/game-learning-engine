@@ -36,7 +36,7 @@ using ComponentArray = std::array<Component*, maxComponents>;
 class Component {
 public:
 	Entity* entity;
-
+	bool drawFlag;
 	virtual void init() {}
 	virtual void update() {}
 	virtual void draw() {}

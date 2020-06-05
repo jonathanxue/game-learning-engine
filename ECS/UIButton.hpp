@@ -18,31 +18,7 @@ public:
 
 	~UIButton() {}
 
-	void init() override {
-		btnTexture = Game::assets->GetTexture("button_default");
-		trans = &entity->getComponent<TransformComponent>();
-
-		//Transform component dictates all
-		if (trans != NULL) {
-			ComponentHelper::UpdateRectangleToTransform(dest, *trans);
-
-		}
-
-		src.x = src.y = 0;
-		src.h = 32;
-		src.w = 32;
-	}
-
-	void update() override {
-		if (trans != NULL) {
-			ComponentHelper::UpdateRectangleToTransform(dest, *trans);
-		}
-	}
-
-	void draw() override {
-		TextureManager::Draw(btnTexture, src, dest, SDL_FLIP_NONE);
-	}
-
+	
 	//This kinda has to be called
 	void setCallBack(std::function<void()> callback) {
 		callBack = callback;
@@ -68,6 +44,34 @@ public:
 			if (callBack != NULL) {
 				callBack();
 			}
+		}
+	}
+
+	void init() override {
+		btnTexture = Game::assets->GetTexture("button_default");
+		trans = &entity->getComponent<TransformComponent>();
+
+		//Transform component dictates all
+		if (trans != NULL) {
+			ComponentHelper::UpdateRectangleToTransform(dest, *trans);
+
+		}
+
+		src.x = src.y = 0;
+		src.h = 32;
+		src.w = 32;
+		drawFlag = true;
+	}
+
+	void update() override {
+		if (trans != NULL) {
+			ComponentHelper::UpdateRectangleToTransform(dest, *trans);
+		}
+	}
+
+	void draw() override {
+		if (drawFlag) {
+			TextureManager::Draw(btnTexture, src, dest, SDL_FLIP_NONE);
 		}
 	}
 };

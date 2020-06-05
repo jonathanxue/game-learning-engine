@@ -96,6 +96,7 @@ public:
 
 	void init() override {
 		trans = &entity->getComponent<TransformComponent>();
+		drawFlag = true;
 	}
 
 	//Place label in middle of button
@@ -131,6 +132,8 @@ public:
 	}
 
 	void draw() override {
-		SDL_RenderCopy(Game::renderer, labelTexture, nullptr, &position);
+		if (drawFlag) {
+			SDL_RenderCopy(Game::renderer, labelTexture, nullptr, &position);
+		}
 	}
 };

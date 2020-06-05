@@ -60,6 +60,8 @@ public:
 
 		ComponentHelper::UpdateRectangleToTransform(destFill, *transform);
 		ComponentHelper::UpdateRectangleToTransform(destEmpty, *transform);
+
+		drawFlag = true;
 	}
 
 	void update() override {
@@ -77,8 +79,10 @@ public:
 	}
 
 	void draw() override {
-		TextureManager::Draw(emptyTexture, src, destEmpty, SDL_FLIP_NONE);
-		TextureManager::Draw(fillTexture, src, destFill, SDL_FLIP_NONE);
-		label->draw();
+		if (drawFlag) {
+			TextureManager::Draw(emptyTexture, src, destEmpty, SDL_FLIP_NONE);
+			TextureManager::Draw(fillTexture, src, destFill, SDL_FLIP_NONE);
+			label->draw();
+		}
 	}
 };

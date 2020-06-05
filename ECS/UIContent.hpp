@@ -45,6 +45,7 @@ public:
 		src.x = src.y = 0;
 		src.h = 32;
 		src.w = 32;
+		drawFlag = true;
 	}
 
 	void update() override {
@@ -66,9 +67,11 @@ public:
 	}
 
 	void draw() override {
-		TextureManager::Draw(texture, src, dest, SDL_FLIP_NONE);
-		for (auto& i : entities) {
-			i->draw();
+		if (drawFlag) {
+			TextureManager::Draw(texture, src, dest, SDL_FLIP_NONE);
+			for (auto& i : entities) {
+				i->draw();
+			}
 		}
 	}
 };

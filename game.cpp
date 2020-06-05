@@ -21,6 +21,7 @@ SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
 int Game::eventResult = 0; //event can't be null, so we use this
 SDL_Rect Game::camera = { 0,0,800,640 };
+SDL_Rect temp = { 0,0,800,640 };
 
 //Asset manager
 AssetManager* Game::assets = new AssetManager(&manager);
@@ -115,7 +116,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.addComponent<SpriteComponent>("player", true);
 	player.addComponent<ColliderComponent>("player");
 	player.addComponent<KeyboardController>();
-	player.getComponent<ColliderComponent>().setVisible(false);
+	player.getComponent<ColliderComponent>().setVisible(true);
 	player.addGroup(groupPlayers);
 
 	label.addComponent<TransformComponent>(10,5);
@@ -205,6 +206,7 @@ void Game::update() {
 	camera.x = static_cast<int>(player.getComponent<TransformComponent>().position.x) - 400;
 	camera.y = static_cast<int>(player.getComponent<TransformComponent>().position.y) - 320;
 
+	//Keeps camera in bounds of window
 	if (camera.x < 0) {
 		camera.x = 0;
 	}
@@ -244,6 +246,7 @@ void Game::render() {
 	ui.draw();
 	button2.draw();
 	slider.draw();
+	TextureManager::Draw(assets->GetTexture("collider"), temp, Game::camera, SDL_FLIP_NONE);
 	SDL_RenderPresent(renderer);
 }
 

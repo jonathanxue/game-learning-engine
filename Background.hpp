@@ -1,16 +1,26 @@
 #pragma once
 #include <string>
+#include "SDL.h"
 
 class Background {
 private:
 	std::string textureID;
-	int mapScale;
-	int tileSize;
-	int scaledSize;
+	SDL_Rect delta, dest1, dest2;
+	SDL_Texture* texture;
+	int texW, texH;
+	int xOff, yOff;
+	int scrollSpeed;
+	bool scrolling = true;
 public:
-	Background(std::string tID, int mapScale, int tileSize);
+	Background(std::string tID, bool parallax);
 	~Background();
 
-	void LoadBackground(std::string path, int sizeX, int sizeY);
-	void AddTile(int srcX, int srcY, int xpos, int ypos);
+	void init();
+	void LoadBackground(std::string path);
+	void ScrollBackgroundHorizontal();
+	void ScrollBackgroundVertical(); //TODO
+	void InvokeParallaxHorizontal();
+	void InvokeParallaxVertical(); //TODO
+	void Draw();
+	std::string GetBackgroundID();
 };

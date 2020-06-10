@@ -5,7 +5,7 @@
 
 class UIContent : public Component {
 private:
-	SDL_Rect src, dest;
+	SDL_Rect dest;
 	TransformComponent* transform;
 	SDL_Texture* texture;
 	std::vector<std::unique_ptr<Entity>> entities;
@@ -41,10 +41,6 @@ public:
 		if (transform != NULL) {
 			ComponentHelper::UpdateRectangleToTransform(dest, *transform);
 		}
-
-		src.x = src.y = 0;
-		src.h = 32;
-		src.w = 32;
 		drawFlag = true;
 	}
 
@@ -68,7 +64,7 @@ public:
 
 	void draw() override {
 		if (drawFlag) {
-			TextureManager::Draw(texture, src, dest, SDL_FLIP_NONE);
+			TextureManager::Draw(texture, dest, SDL_FLIP_NONE);
 			for (auto& i : entities) {
 				i->draw();
 			}

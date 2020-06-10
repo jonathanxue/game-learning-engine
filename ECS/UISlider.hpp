@@ -8,7 +8,7 @@ class UISlider : public Component {
 private:
 	SDL_Texture* emptyTexture;
 	SDL_Texture* fillTexture;
-	SDL_Rect src, destFill, destEmpty;
+	SDL_Rect destFill, destEmpty;
 	TransformComponent* transform; //
 	UILabel* label;
 	bool inFocus;
@@ -54,10 +54,6 @@ public:
 		percentValue = 50.0f;
 		inFocus = false;
 
-		src.x = 0;
-		src.y = 0;
-		src.w = src.h = 32;
-
 		ComponentHelper::UpdateRectangleToTransform(destFill, *transform);
 		ComponentHelper::UpdateRectangleToTransform(destEmpty, *transform);
 
@@ -80,8 +76,8 @@ public:
 
 	void draw() override {
 		if (drawFlag) {
-			TextureManager::Draw(emptyTexture, src, destEmpty, SDL_FLIP_NONE);
-			TextureManager::Draw(fillTexture, src, destFill, SDL_FLIP_NONE);
+			TextureManager::Draw(emptyTexture, destEmpty, SDL_FLIP_NONE);
+			TextureManager::Draw(fillTexture, destFill, SDL_FLIP_NONE);
 			label->draw();
 		}
 	}

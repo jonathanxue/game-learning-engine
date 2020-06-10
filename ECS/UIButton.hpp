@@ -7,7 +7,7 @@
 class UIButton : public Component {
 private:
 	TransformComponent* trans;
-	SDL_Rect dest, src;
+	SDL_Rect dest;
 	SDL_Texture* btnTexture;
 	bool isPressed = false;
 	//This is what the button does
@@ -56,10 +56,6 @@ public:
 			ComponentHelper::UpdateRectangleToTransform(dest, *trans);
 
 		}
-
-		src.x = src.y = 0;
-		src.h = 32;
-		src.w = 32;
 		drawFlag = true;
 	}
 
@@ -71,7 +67,7 @@ public:
 
 	void draw() override {
 		if (drawFlag) {
-			TextureManager::Draw(btnTexture, src, dest, SDL_FLIP_NONE);
+			TextureManager::Draw(btnTexture, dest, SDL_FLIP_NONE);
 		}
 	}
 };

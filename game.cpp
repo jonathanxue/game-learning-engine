@@ -82,6 +82,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		std::cout << "Error : SDL_TTF" << std::endl;
 	}
 
+	//Music Assets
 	assets->AddMusic("defaultBGM", "assets/testBGM.mp3");
 	assets->AddSoundEffect("spellmoving", "assets/spell.wav");
 	assets->AddSoundEffect("spellhit", "assets/interface4.wav");
@@ -89,10 +90,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	musicplayer->setSong("defaultBGM");
 	//musicplayer->play();
 
-	//assets->AddTexture("background", "assets/openSeas_texture.png");
 	assets->AddTexture("terrain", "assets/grassmap_textures.png");
 	assets->AddTexture("player", "assets/player_anims.png");
 	assets->AddTexture("projectile", "assets/testprojectile.png");
+	assets->AddTexture("background", "assets/testBG.png");
 
 	assets->AddTexture("collider", "assets/hitbox.png");
 
@@ -107,9 +108,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	map = new Map("terrain", 3, 32);
 	map->LoadMap("assets/testmap.map",16,10);
 
-	background = new Background("terrain", 3, 32);
-	background->LoadBackground("assets/testback.map", 16, 10);
-
+	background = new Background("background", true);
+	background->init();
 
 	//ecs
 	player.addComponent<TransformComponent>(4);
@@ -213,20 +213,20 @@ void Game::update() {
 	if (camera.y < 0) {
 		camera.y = 0;
 	}
-	if (camera.x > camera.w) {
+	/*if (camera.x > camera.w) {
 		camera.x = camera.w;
 	}
 	if (camera.y > camera.h) {
 		camera.x = camera.h;
-	}
+	}*/
+	//std::cout << camera.x << ", " << camera.y << std::endl;
+	background->InvokeParallax();
 }
 
 void Game::render() {
 	SDL_RenderClear(renderer);
+	background->Draw();
 	//Add stuff to update here
-	for (auto& t : backgrounds) {
-		t->draw();
-	}
 	for (auto& t : tiles) {
 		t->draw();
 	}
@@ -243,10 +243,10 @@ void Game::render() {
 		e->draw();
 	}*/
 	label.draw();
-	ui.draw();
+	//ui.draw();
 	button2.draw();
-	slider.draw();
-	TextureManager::Draw(assets->GetTexture("collider"), temp, Game::camera, SDL_FLIP_NONE);
+	//slider.draw();
+	//TextureManager::Draw(assets->GetTexture("collider"), temp, Game::camera, SDL_FLIP_NONE);
 	SDL_RenderPresent(renderer);
 }
 

@@ -220,7 +220,7 @@ void Game::update() {
 		camera.x = camera.h;
 	}*/
 	//std::cout << camera.x << ", " << camera.y << std::endl;
-	background->InvokeParallax();
+	background->InvokeParallaxHorizontal();
 }
 
 void Game::render() {

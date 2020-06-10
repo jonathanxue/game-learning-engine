@@ -1,6 +1,6 @@
 #pragma once
 
-#include "EntityComponentSystem.hpp"
+#include "ComponentHelper.hpp"
 
 
 class TileComponent : public Component {
@@ -36,14 +36,7 @@ public:
 		destRect.x = static_cast<int>(position.x - Game::camera.x);
 		destRect.y = static_cast<int>(position.y - Game::camera.y);
 		//This tells us to not render anything outside of the camera
-		//TODO: Refactor and probably move to ComponentHelper.hpp
-		if ((destRect.x + destRect.w) >= Game::camera.x && (destRect.x) <= (Game::camera.x + Game::camera.w)
-			&& (destRect.y + destRect.h) >= Game::camera.y && (destRect.y) <= (Game::camera.y + Game::camera.h)) {
-			drawFlag = true;
-		}
-		else{
-			drawFlag = false;
-		}
+		drawFlag = ComponentHelper::CheckRectangleIntersection(destRect, Game::camera);
 	}
 
 	void draw() override {

@@ -10,7 +10,7 @@ private:
 	int texW, texH;
 	int xOff, yOff;
 	int scrollSpeed;
-	bool scrolling = true;
+	bool scrollFlag = true;
 public:
 	Background(std::string tID, bool parallax);
 	~Background();

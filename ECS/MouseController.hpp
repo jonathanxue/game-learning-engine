@@ -110,10 +110,11 @@ public:
 					slider->setFocus(false);
 				}
 				if (dropdown != NULL) {
-					dropdown->setPressed(false); //Release mouse
-					if (!coordInBounds()) {
+					if (!coordInBounds() && !dropdown->isPressed()) {
 						dropdown->setFocus(false);
 					}
+					dropdown->setPressed(false); //Release mouse
+
 				}
 				break;
 			default:

@@ -37,9 +37,7 @@ public:
 		SetLabelText(labelText, labelFont);
 	}
 
-	~UILabel() {
-		//SDL_DestroyTexture(labelTexture);
-	}
+	~UILabel() {}
 
 	std::string getLabelText() {
 		return labelText;
@@ -99,11 +97,11 @@ public:
 		drawFlag = true;
 	}
 
-	//Place label in middle of button
+	//Place label in middle of transform
 	void update() override {
 		if (trans != NULL) {
 			if (detached) {
-
+				//TODO
 			}
 			else {
 				//Left allignment
@@ -120,9 +118,9 @@ public:
 				if (trans->width < position.w) {
 					trans->width = position.w;
 				}
-				if (trans->height < position.h) {
+				/*if (trans->height < position.h) {
 					trans->height = position.h;
-				}
+				}*/
 				if (trans->width < minWidth) {
 					trans->width = minWidth;
 				}

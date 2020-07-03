@@ -20,8 +20,8 @@
 #include "UILabel.hpp"
 #include "UIButton.hpp"
 #include "UIContent.hpp"
-#include "UITextBox.hpp"
 #include "UISlider.hpp"
+#include "UIDropDown.hpp"
 
 //User input
 #include "TypingController.hpp"

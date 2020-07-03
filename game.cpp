@@ -45,6 +45,7 @@ auto& button(manager.addEntity());
 auto& button2(manager.addEntity());
 auto& ui(manager.addEntity());
 auto& slider(manager.addEntity());
+auto& dropdown(manager.addEntity());
 
 Game::Game() {
 	Game::window = nullptr;
@@ -102,8 +103,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	assets->AddTexture("button_default", "assets/UITextures/button_default.png");
 	assets->AddTexture("button_pressed", "assets/UITextures/button_pressed.png");
 	assets->AddTexture("menu", "assets/UITextures/menutexture.png");
-	assets->AddTexture("slider_empty", "assets/UITextures/sliderEmpty.png");
-	assets->AddTexture("slider_full", "assets/UITextures/sliderFull.png");
+	assets->AddTexture("slider_empty", "assets/UITextures/slider_empty.png");
+	assets->AddTexture("slider_full", "assets/UITextures/slider_full.png");
+	assets->AddTexture("dropdown_active", "assets/UITextures/dropdown_active.png");
+	assets->AddTexture("dropdown_passive", "assets/UITextures/dropdown_passive.png");
 
 	map = new Map("terrain", 3, 32);
 	map->LoadMap("assets/testmap.map",16,10);
@@ -117,6 +120,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.addComponent<ColliderComponent>("player");
 	player.addComponent<KeyboardController>();
 	player.getComponent<ColliderComponent>().setVisible(true);
+	//std::cout << player.getID() << std::endl;
 	player.addGroup(groupPlayers);
 
 	label.addComponent<TransformComponent>(10,5);
@@ -150,6 +154,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	button2.addComponent<UILabel>("Test2", defaultFont, defaultFontColour, 0);
 	button2.addComponent<SoundEffectComponent>("spellhit", 0);
 	button2.addComponent<MouseController>();
+
+	dropdown.addComponent<TransformComponent>(60, 300, 100, 50, 1);
+	dropdown.addComponent<UIDropDown>();
+	dropdown.addComponent<MouseController>();
 
 	assets->CreateProjectile(Vector2D(100, 100), Vector2D(2, 0), 500, 2, "projectile");
 	assets->CreateProjectile(Vector2D(100, 200), Vector2D(2, 0), 500, 2, "projectile");
@@ -246,6 +254,7 @@ void Game::render() {
 	//ui.draw();
 	button2.draw();
 	//slider.draw();
+	dropdown.draw();
 	//TextureManager::Draw(assets->GetTexture("collider"), temp, Game::camera, SDL_FLIP_NONE);
 	SDL_RenderPresent(renderer);
 }

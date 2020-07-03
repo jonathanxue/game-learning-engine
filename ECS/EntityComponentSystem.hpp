@@ -14,6 +14,8 @@ class Manager;
 using ComponentID = std::size_t;
 using Group = std::size_t;
 
+using EntityID = std::size_t;
+
 inline ComponentID generateNewComponentTypeID() {
 	static ComponentID lastID = 0u;
 	return lastID++;
@@ -23,6 +25,11 @@ template <typename T> inline ComponentID generateComponentTypeID() noexcept {
 	static_assert (std::is_base_of<Component, T>::value, "");
 	static ComponentID typeID = generateNewComponentTypeID();
 	return typeID;
+}
+
+inline EntityID generateNewEntityID() {
+	static EntityID lastID = 0u;
+	return lastID++;
 }
 
 constexpr std::size_t maxComponents = 32;
@@ -56,7 +63,10 @@ private:
 	GroupBitSet groupBitSet;
 
 public:
-	Entity(Manager& mManager) : manager(mManager) {}
+	Entity(Manager& mManager) : manager(mManager) {
+		//temporary
+		id = generateNewEntityID();
+	}
 
 	void update() {
 		for (auto& c : components) c->update();
@@ -77,6 +87,14 @@ public:
 
 	void delGroup(Group mGroup) {
 		groupBitSet[mGroup] = false;
+	}
+
+	int getID() {
+		return id;
+	}
+
+	void setID(int i) {
+		id = i;
 	}
 
 	template<typename T> bool hasComponent() const {
@@ -107,9 +125,12 @@ class Manager {
 private:
 	std::vector<std::unique_ptr<Entity>> entities;
 	std::array<std::vector<Entity*>, maxGroups> groupedEntities;
+	
 public:
 	void update() {
-		for (auto& e : entities) e->update();
+		for (auto& e : entities) {
+			e->update();
+		}
 	}
 
 	void draw() {
@@ -147,6 +168,14 @@ public:
 		std::unique_ptr<Entity> uPtr{ e };
 		entities.emplace_back(std::move(uPtr));
 		return *e;
+	}
+
+	Entity& getEntity(int i) {
+		for (auto& e: entities) {
+			if (e->getID() == i) {
+				return *e;
+			}
+		}
 	}
 
 };

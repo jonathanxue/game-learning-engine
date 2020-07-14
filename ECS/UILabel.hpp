@@ -43,6 +43,10 @@ public:
 		return labelText;
 	}
 
+	int getTextWidth() {
+		return position.w;
+	}
+
 	//Create texture for normal text
 	void SetLabelText(const std::string& text, const std::string& font) {
 		this->labelText = text;
@@ -74,7 +78,7 @@ public:
 		SDL_QueryTexture(labelTexture, nullptr, nullptr, &position.w, &position.h);
 	}
 
-	void updateLabelText(const std::string& text) {
+	void UpdateLabelText(const std::string& text) {
 		this->labelText = text;
 
 		if (this->labelTexture != nullptr) {
@@ -91,6 +95,7 @@ public:
 	void SetFontColor(SDL_Color newColour) {
 		this->textColour = newColour;
 	}
+
 
 	void init() override {
 		trans = &entity->getComponent<TransformComponent>();

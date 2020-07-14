@@ -7,6 +7,7 @@
 #include "Collision.hpp"
 #include "AssetManager.hpp"
 #include "MusicPlayer.hpp"
+#include "UIManager.hpp"
 #include <sstream>
 
 #include "UIResources/ButtonCallbacks.hpp"
@@ -20,11 +21,13 @@ Manager manager;
 SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
 int Game::eventResult = 0; //event can't be null, so we use this
-SDL_Rect Game::camera = { 0,0,800,640 };
-SDL_Rect temp = { 0,0,800,640 };
+SDL_Rect Game::camera = { 0,0,1200,800 };
 
 //Asset manager
 AssetManager* Game::assets = new AssetManager(&manager);
+
+//UI Manager
+UIManager* Game::uimanager = new UIManager(&manager);
 
 //Default values
 std::string Game::defaultFont = "Fixedsys";
@@ -119,45 +122,25 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.addComponent<SpriteComponent>("player", true);
 	player.addComponent<ColliderComponent>("player");
 	player.addComponent<KeyboardController>();
-	player.getComponent<ColliderComponent>().setVisible(true);
-	//std::cout << player.getID() << std::endl;
+	player.getComponent<ColliderComponent>().setDrawFlag(true);
 	player.addGroup(groupPlayers);
-
-	label.addComponent<TransformComponent>(10,5);
-	label.addComponent<UILabel>("TestLabel", defaultFont, defaultFontColour, -1);
-	label.addComponent<TypingController>();
-	label.addComponent<MouseController>();
-	//label.getComponent<TypingController>().enableTyping();
 
 	ButtonCallbacks bck = ButtonCallbacks();
 	bck.addEntity(&ui);
 
-	slider.addComponent<TransformComponent>(500, 700, 150, 30, 1);
-	slider.addComponent<UILabel>("0000", defaultFont, defaultFontColour, 0);
-	slider.addComponent<UISlider>();
-	slider.addComponent<MouseController>();
-
-	button.addComponent<TransformComponent>(10, 50, 100, 50, 1);
-	button.addComponent<UIButton>();
-	button.addComponent<UILabel>("Test1", defaultFont, defaultFontColour, 0);
-	button.getComponent<UIButton>().setCallBack(ButtonCallbacks::test1);
-	button.addComponent<SoundEffectComponent>("spellhit", 0);
-	button.addComponent<MouseController>();
+	uimanager->CreateLabel(10, 5, "TestLabel");
+	uimanager->CreateSlider(500, 700, 150, 30, "0000");
+	uimanager->CreateButton(10, 50, 100, 50, "Test1", ButtonCallbacks::test1);
 
 	ui.addComponent<TransformComponent>(300, 300, 200, 200, 1);
 	ui.addComponent<UIContent>(false);
-	ui.getComponent<UIContent>().addEntity(&button);
+	//ui.getComponent<UIContent>().addEntity(&button);
 
-	button2.addComponent<TransformComponent>(10, 150, 100, 50, 1);
-	button2.addComponent<UIButton>();
-	button2.getComponent<UIButton>().setCallBack(std::bind(&ButtonCallbacks::test2, bck));
-	button2.addComponent<UILabel>("Test2", defaultFont, defaultFontColour, 0);
-	button2.addComponent<SoundEffectComponent>("spellhit", 0);
-	button2.addComponent<MouseController>();
+	uimanager->CreateButton(10, 150, 100, 50, "Test2", std::bind(&ButtonCallbacks::test2, bck));
 
-	dropdown.addComponent<TransformComponent>(60, 300, 100, 50, 1);
-	dropdown.addComponent<UIDropDown>();
-	dropdown.addComponent<MouseController>();
+	std::string temp[] = { "monta", "rajko", "sam", "tristan", "josh" };
+	uimanager->CreateDropdown(60, 300, 100, 50, temp, 5);
+
 
 	assets->CreateProjectile(Vector2D(100, 100), Vector2D(2, 0), 500, 2, "projectile");
 	assets->CreateProjectile(Vector2D(100, 200), Vector2D(2, 0), 500, 2, "projectile");
@@ -190,10 +173,6 @@ void Game::update() {
 	SDL_Rect playerCol = player.getComponent<ColliderComponent>().collider;
 	Vector2D playerPos = player.getComponent<TransformComponent>().position;
 
-	//std::stringstream ss;
-	//ss << "Player position: " << playerPos;
-	//label.getComponent<UILabel>().SetLabelText(ss.str(), "Fixedsys");
-
 	manager.refresh();
 	manager.update();
 
@@ -211,8 +190,8 @@ void Game::update() {
 	}
 
 	//Camera following
-	camera.x = static_cast<int>(player.getComponent<TransformComponent>().position.x) - 400;
-	camera.y = static_cast<int>(player.getComponent<TransformComponent>().position.y) - 320;
+	camera.x = player.getComponent<TransformComponent>().position.x - 400;
+	camera.y = player.getComponent<TransformComponent>().position.y - 320;
 
 	//Keeps camera in bounds of window
 	if (camera.x < 0) {
@@ -227,7 +206,7 @@ void Game::update() {
 	if (camera.y > camera.h) {
 		camera.x = camera.h;
 	}*/
-	//std::cout << camera.x << ", " << camera.y << std::endl;
+
 	background->InvokeParallaxHorizontal();
 }
 
@@ -247,15 +226,13 @@ void Game::render() {
 	for (auto& p : projectiles) {
 		p->draw();
 	}
+	for (auto& e : uiItems) {
+		e->draw();
+	}
 	/*for (auto& e : enemies) {
 		e->draw();
 	}*/
-	label.draw();
-	//ui.draw();
-	button2.draw();
-	//slider.draw();
-	dropdown.draw();
-	//TextureManager::Draw(assets->GetTexture("collider"), temp, Game::camera, SDL_FLIP_NONE);
+	TextureManager::Draw(assets->GetTexture("collider"), camera, SDL_FLIP_NONE);
 	SDL_RenderPresent(renderer);
 }
 

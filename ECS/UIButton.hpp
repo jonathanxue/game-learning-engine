@@ -12,6 +12,7 @@ private:
 	bool isPressed = false;
 	//This is what the button does
 	std::function<void()> callBack;
+	int padding = 15;
 
 public:
 	UIButton() {}

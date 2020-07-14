@@ -5,7 +5,6 @@
 
 class ColliderComponent : public Component {
 private:
-	bool isVisible = false;
 public:
 
 	SDL_Rect collider;
@@ -66,13 +65,12 @@ public:
 	}
 
 	void draw() override {
-		if (isVisible) {
+		if (drawFlag) {
 			TextureManager::Draw(tex, srcRect, destRect, SDL_FLIP_NONE);
 		}
 	}
 
-	void setVisible(bool v) {
-		isVisible = v;
+	void setDrawFlag(bool b) {
+		drawFlag = b;
 	}
-
 };

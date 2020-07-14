@@ -51,8 +51,8 @@ public:
 	}
 
 	void update() override {
-		position.x += velocity.x * speed;
-		position.y += velocity.y * speed;
+		position.x += (velocity.x * speed);
+		position.y += (velocity.y * speed);
 	}
 
 	void updateProperties(float dx, float dy, int dw, int dh) {

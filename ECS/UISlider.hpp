@@ -70,7 +70,7 @@ public:
 		if (label != NULL) {
 			std::stringstream ss;
 			ss << percentValue;
-			label->updateLabelText(ss.str());
+			label->UpdateLabelText(ss.str());
 		}
 	}
 

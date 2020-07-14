@@ -7,7 +7,7 @@ private:
 	SDL_Rect dest, textDest;
 	SDL_Texture* activeTexture, *passiveTexture, *labelTexture;
 	std::string value = "";
-	std::vector<std::string> contents = {"a", "b", "c", "d", "e"};
+	std::vector<std::string> contents;
 	int selectedItem = 0; //This is index of contents
 	int divHeight = 30;
 	int minWidth = 50;
@@ -15,6 +15,9 @@ private:
 	bool pressed = false;
 public:
 	UIDropDown() {}
+	UIDropDown(std::string input[], int size) {
+		setContents(input, size);
+	}
 	~UIDropDown() {}
 
 	void setPressed(bool b) {
@@ -44,6 +47,13 @@ public:
 	void centerLabel() {
 		textDest.x = (dest.x + (dest.w / 2)) - ((textDest.w) / 2);
 		textDest.y = (dest.y + (dest.h / 2)) - ((textDest.h) / 2);
+	}
+
+	void setContents(std::string in[], int size) {
+		contents.clear();
+		for (int i = 0; i < size; i++) {
+			contents.push_back(in[i]);
+		}
 	}
 
 	void init() {
@@ -78,8 +88,6 @@ public:
 		selectedItem = (relY - (relY % divHeight)) / divHeight; //Retrieves the index associated with the click position
 		value = contents[selectedItem];
 
-		TextureManager::Draw(activeTexture, dest, SDL_FLIP_NONE);
-
 		//Update label texture to new value
 		if (labelTexture != nullptr) {
 			SDL_DestroyTexture(labelTexture);
@@ -104,9 +112,9 @@ public:
 	//Draw one large empty dropdown
 	//Draw individual active component on top
 	void draw() override {
-		if (drawFlag) {
-			if (!pressed) {
-				if (inFocus) {
+		if (drawFlag) { //If visible
+			if (!pressed) { //If did not press mouse down on control
+				if (inFocus) { //If control is open (selected already)
 					//Iteratively draw rectangle for each dropdown item
 					for (int i = 0; i < contents.size(); i++) {
 						if (i == selectedItem) { //Highlight the already selected value
@@ -134,22 +142,24 @@ public:
 					dest.y -= divHeight * contents.size(); //Reset position
 					textDest.y -= divHeight * contents.size();
 				}
-				else {
+				else { //If control is closed DEFAULT CLOSED
 					centerLabel();
 					TextureManager::Draw(activeTexture, dest, SDL_FLIP_NONE);
 					SDL_RenderCopy(Game::renderer, labelTexture, nullptr, &textDest);
 				}
 			}
-			else {
-				if (!inFocus) {
+			else { //If mouse pressed down on control
+				if (!inFocus) { //If control is closed
 					TextureManager::Draw(passiveTexture, dest, SDL_FLIP_NONE);
+					
+					SDL_RenderCopy(Game::renderer, labelTexture, nullptr, &textDest);
 				}
 				//TODO: Refactor this mess
-				else {
+				else { //If control is opened
 					for (int i = 0; i < contents.size(); i++) {
-						if (i == selectedItem) { //Highlight the already selected value
+						if (i == selectedItem) {
 							TextureManager::Draw(activeTexture, dest, SDL_FLIP_NONE);
-							SDL_RenderCopy(Game::renderer, labelTexture, nullptr, &textDest); //draw already existing label
+							SDL_RenderCopy(Game::renderer, labelTexture, nullptr, &textDest);
 						}
 						else {
 							//We create temporary texture for each non-selected entry

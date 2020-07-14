@@ -10,6 +10,7 @@
 #include <string>
 
 class AssetManager;
+class UIManager;
 class ColliderComponent;
 class MusicPlayer;
 
@@ -53,6 +54,7 @@ public:
 
 	static SDL_Rect camera;
 	static AssetManager* assets;
+	static UIManager* uimanager;
 	static gameState state;
 
 	static std::string defaultFont;

@@ -8,7 +8,9 @@
 #include "AssetManager.hpp"
 #include "MusicPlayer.hpp"
 #include "UIManager.hpp"
-#include <sstream>
+#include "Scene/SceneManager.hpp"
+#include "Scene/Scenes.hpp"
+#include "LevelLoader.hpp"
 
 #include "UIResources/ButtonCallbacks.hpp"
 
@@ -24,10 +26,15 @@ int Game::eventResult = 0; //event can't be null, so we use this
 SDL_Rect Game::camera = { 0,0,1200,800 };
 
 //Asset manager
-AssetManager* Game::assets = new AssetManager(&manager);
+AssetManager* Game::assets = new AssetManager();
 
 //UI Manager
 UIManager* Game::uimanager = new UIManager(&manager);
+
+//Scene Manager
+SceneManager* Game::scenemanager = new SceneManager(Game::assets);
+
+LevelLoader* Game::levelLoader = new LevelLoader();
 
 //Default values
 std::string Game::defaultFont = "Fixedsys";
@@ -43,12 +50,8 @@ MusicPlayer* musicplayer;
 
 //Level entities
 auto& player(manager.addEntity());
-auto& label(manager.addEntity());
-auto& button(manager.addEntity());
-auto& button2(manager.addEntity());
 auto& ui(manager.addEntity());
-auto& slider(manager.addEntity());
-auto& dropdown(manager.addEntity());
+
 
 Game::Game() {
 	Game::window = nullptr;
@@ -118,35 +121,40 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	background->init();
 
 	//ecs
-	player.addComponent<TransformComponent>(4);
+	/*player.addComponent<TransformComponent>(4);
 	player.addComponent<SpriteComponent>("player", true);
 	player.addComponent<ColliderComponent>("player");
 	player.addComponent<KeyboardController>();
 	player.getComponent<ColliderComponent>().setDrawFlag(true);
 	player.addGroup(groupPlayers);
+	*/
 
 	ButtonCallbacks bck = ButtonCallbacks();
 	bck.addEntity(&ui);
 
-	uimanager->CreateLabel(10, 5, "TestLabel");
-	uimanager->CreateSlider(500, 700, 150, 30, "0000");
-	uimanager->CreateButton(10, 50, 100, 50, "Test1", ButtonCallbacks::test1);
+	//uimanager->CreateLabel(10, 5, "TestLabel");
+	//uimanager->CreateSlider(500, 700, 150, 30, "0000");
+	//uimanager->CreateButton(10, 50, 100, 50, "Test1", ButtonCallbacks::test1);
 
-	ui.addComponent<TransformComponent>(300, 300, 200, 200, 1);
-	ui.addComponent<UIContent>(false);
+	//ui.addComponent<TransformComponent>(300, 300, 200, 200, 1);
+	//ui.addComponent<UIContent>(false);
 	//ui.getComponent<UIContent>().addEntity(&button);
 
-	uimanager->CreateButton(10, 150, 100, 50, "Test2", std::bind(&ButtonCallbacks::test2, bck));
+	//uimanager->CreateButton(10, 150, 100, 50, "Test2", std::bind(&ButtonCallbacks::test2, bck));
 
-	std::string temp[] = { "monta", "rajko", "sam", "tristan", "josh" };
-	uimanager->CreateDropdown(60, 300, 100, 50, temp, 5);
+	//std::string temp[] = { "monta", "rajko", "sam", "tristan", "josh" };
+	//uimanager->CreateDropdown(60, 300, 100, 50, temp, 5);
 
+	MenuScene* testscene = new MenuScene("test", "levels/MainMenu.xml");
+	MenuScene* testscene2 = new MenuScene("test2", "levels/Settings.xml");
+	levelLoader->LoadScene(testscene);
+	levelLoader->PopulateEntities();
+	levelLoader->LoadScene(testscene2);
+	levelLoader->PopulateEntities();
+	scenemanager->AddScene(testscene);
+	scenemanager->AddScene(testscene2);
+	scenemanager->SelectScene("test");
 
-	assets->CreateProjectile(Vector2D(100, 100), Vector2D(2, 0), 500, 2, "projectile");
-	assets->CreateProjectile(Vector2D(100, 200), Vector2D(2, 0), 500, 2, "projectile");
-	assets->CreateProjectile(Vector2D(100, 300), Vector2D(2, 0), 500, 2, "projectile");
-	assets->CreateProjectile(Vector2D(100, 400), Vector2D(2, 0), 500, 2, "projectile");
-	assets->CreateProjectile(Vector2D(100, 500), Vector2D(2, 0), 500, 2, "projectile");
 }
 
 auto& backgrounds(manager.getGroup(Game::groupBackgrounds)); //Background of window
@@ -160,6 +168,16 @@ auto& uiItems(manager.getGroup(Game::groupUI));
 void Game::handleEvents() {
 	eventResult = SDL_PollEvent(&event);
 	switch (event.type) {
+		case SDL_KEYDOWN:
+			if (event.key.keysym.sym == SDLK_1) {
+				printf("Switched to Scene 1\n");
+				scenemanager->SelectScene("test");
+			}
+			else if (event.key.keysym.sym == SDLK_2) {
+				printf("Switched to Scene 2\n");
+				scenemanager->SelectScene("test2");
+			}
+			break;
 		case SDL_QUIT:
 			isRunning = false;
 			break;
@@ -170,13 +188,15 @@ void Game::handleEvents() {
 
 void Game::update() {
 
-	SDL_Rect playerCol = player.getComponent<ColliderComponent>().collider;
+	/*SDL_Rect playerCol = player.getComponent<ColliderComponent>().collider;
 	Vector2D playerPos = player.getComponent<TransformComponent>().position;
 
 	manager.refresh();
-	manager.update();
+	manager.update();*/
 
-	for (auto& c : colliders) {
+	scenemanager->update();
+
+	/*for (auto& c : colliders) {
 		SDL_Rect cCol = c->getComponent<ColliderComponent>().collider;
 		if (Collision::AABB(cCol, playerCol)) {
 			player.getComponent<TransformComponent>().position = playerPos;
@@ -199,7 +219,7 @@ void Game::update() {
 	}
 	if (camera.y < 0) {
 		camera.y = 0;
-	}
+	}*/
 	/*if (camera.x > camera.w) {
 		camera.x = camera.w;
 	}
@@ -207,14 +227,15 @@ void Game::update() {
 		camera.x = camera.h;
 	}*/
 
-	background->InvokeParallaxHorizontal();
+	//background->InvokeParallaxHorizontal();
 }
 
 void Game::render() {
 	SDL_RenderClear(renderer);
-	background->Draw();
+	scenemanager->draw();
+	//background->Draw();
 	//Add stuff to update here
-	for (auto& t : tiles) {
+	/*for (auto& t : tiles) {
 		t->draw();
 	}
 	for (auto& c : colliders) {
@@ -228,11 +249,8 @@ void Game::render() {
 	}
 	for (auto& e : uiItems) {
 		e->draw();
-	}
-	/*for (auto& e : enemies) {
-		e->draw();
 	}*/
-	TextureManager::Draw(assets->GetTexture("collider"), camera, SDL_FLIP_NONE);
+	//TextureManager::Draw(assets->GetTexture("collider"), camera, SDL_FLIP_NONE);
 	SDL_RenderPresent(renderer);
 }
 

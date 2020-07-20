@@ -9,18 +9,19 @@
 
 class AssetManager {
 private:
-	Manager* manager;
+	//Manager* manager;
 	std::map<std::string, SDL_Texture*> textures;
 	std::map<std::string, Mix_Music*> soundtracks;
 	std::map<std::string, Mix_Chunk*> soundEffects;
 	std::map<std::string, TTF_Font*> fonts;
 
 public:
-	AssetManager(Manager* man);
+	//AssetManager(Manager* man);
+	AssetManager();
 	~AssetManager();
 
 	//Game objects
-	void CreateProjectile(Vector2D pos, Vector2D vel, int range, int speed, std::string id);
+	//void CreateProjectile(Vector2D pos, Vector2D vel, int range, int speed, std::string id);
 
 
 	//Texture Management

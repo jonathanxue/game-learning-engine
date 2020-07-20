@@ -1,16 +1,10 @@
 #include "game.hpp"
-#include "LevelLoader.hpp"
 
 Game* game = nullptr;
-LevelLoader* loader = nullptr;
 
 int main(int argc, char *argv[]) {
 
-	loader = new LevelLoader();
-
-	loader->LoadFile("levels/Settings.xml");
-
-	/*const int fps = 60;
+	const int fps = 60;
 	const int frameDelay = 1000 / fps;
 
 	game = new Game();
@@ -39,6 +33,6 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	game->clean();*/
+	game->clean();
 	return 0;
 }

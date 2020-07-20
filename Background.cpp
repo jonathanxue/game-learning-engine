@@ -6,7 +6,7 @@
 extern Game game;
 
 //Maybe refactor this into a component
-Background::Background(std::string tID, bool scrolling) : textureID(tID), scrollFlag(scrolling)
+Background::Background(std::string tID, bool scrolling) : textureID(tID), scrollFlag(scrolling), delta({0,0,0,0})
 {
 	xOff = yOff = 0;
 	//Maybe re-evaluate this, holding a 1920x1080 texture in memory is lame. Also rendering two copies of it is also lame

@@ -13,6 +13,8 @@ class AssetManager;
 class UIManager;
 class ColliderComponent;
 class MusicPlayer;
+class SceneManager;
+class LevelLoader;
 
 class Game {
 private:
@@ -52,10 +54,13 @@ public:
 	static int eventResult;
 	static bool isRunning;
 
+	static gameState state;
+
 	static SDL_Rect camera;
 	static AssetManager* assets;
 	static UIManager* uimanager;
-	static gameState state;
+	static SceneManager* scenemanager;
+	static LevelLoader* levelLoader;
 
 	static std::string defaultFont;
 	static SDL_Color defaultFontColour;

@@ -15,7 +15,7 @@ private:
 	int padding = 15;
 
 public:
-	UIButton() {}
+	UIButton() : dest({ 0,0,0,0 }), btnTexture(nullptr) {}
 
 	~UIButton() {}
 
@@ -55,7 +55,6 @@ public:
 		//Transform component dictates all
 		if (trans != NULL) {
 			ComponentHelper::UpdateRectangleToTransform(dest, *trans);
-
 		}
 		drawFlag = true;
 	}

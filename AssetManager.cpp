@@ -1,12 +1,14 @@
 #include "AssetManager.hpp"
 #include "ECS/Components.hpp"
 
-AssetManager::AssetManager(Manager* man) : manager(man)
-{}
+//AssetManager::AssetManager(Manager* man) : manager(man)
+//{}
 
-AssetManager::~AssetManager() { free(manager); }
+AssetManager::AssetManager() {}
 
-void AssetManager::CreateProjectile(Vector2D pos, Vector2D vel, int range, int speed, std::string id) {
+AssetManager::~AssetManager() { /*free(manager); */}
+
+/*void AssetManager::CreateProjectile(Vector2D pos, Vector2D vel, int range, int speed, std::string id) {
 	auto& projectile(manager->addEntity());
 	projectile.addComponent<TransformComponent>(pos.x, pos.y, 32, 32, 1);
 	projectile.addComponent<SpriteComponent>(id, false);
@@ -16,6 +18,7 @@ void AssetManager::CreateProjectile(Vector2D pos, Vector2D vel, int range, int s
 	//projectile.getComponent<SoundEffectComponent>().play();
 	projectile.addGroup(Game::groupProjectiles);
 }
+*/
 
 void AssetManager::AddTexture(std::string id, const char* path) {
 	textures.emplace(id, TextureManager::LoadTexture(path));

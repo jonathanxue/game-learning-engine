@@ -18,6 +18,8 @@ public:
 	UIDropDown(std::string input[], int size) {
 		setContents(input, size);
 	}
+	UIDropDown(std::vector<std::string> vec) : contents(vec) {}
+
 	~UIDropDown() {}
 
 	void setPressed(bool b) {
@@ -83,6 +85,9 @@ public:
 	}
 
 	void updateSelectedItem(int ypos) {
+		if (contents.size() < 1) {
+			return;
+		}
 		int temp = selectedItem;
 		int relY = ypos - static_cast<int>(trans->position.y);
 		selectedItem = (relY - (relY % divHeight)) / divHeight; //Retrieves the index associated with the click position

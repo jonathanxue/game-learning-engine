@@ -15,7 +15,8 @@ private:
 public:
 	bool permanent = false;
 	std::string tag;
-	Manager* manager;
+	std::string sceneFilePath;
+	Manager manager;
 	virtual void update() {}
 	virtual void draw() {}
 	virtual ~Scene() {}

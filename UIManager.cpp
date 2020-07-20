@@ -4,7 +4,7 @@ UIManager::UIManager(Manager* man) : manager(man) {}
 
 UIManager::~UIManager(){}
 
-void UIManager::CreateButton(int x, int y, int w, int h, std::string buttonText,std::function<void()> callback) {
+void UIManager::CreateButton(int x, int y, int w, int h, std::string buttonText, std::function<void()> callback) {
 	auto& entity(manager->addEntity());
 	entity.addComponent<TransformComponent>(x, y, w, h, 1);
 	entity.addComponent<UIButton>();

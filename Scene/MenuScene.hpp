@@ -7,12 +7,11 @@
 class MenuScene : public Scene {
 private:
 public:
-	Manager manager;
-	UIManager* uimanager;
 	Background* background;
 
-	MenuScene(std::string t) {
+	MenuScene(std::string t, std::string path) {
 		tag = t;
+		sceneFilePath = path;
 		init();
 	}
 
@@ -21,8 +20,6 @@ public:
 	//Figure out loading from file integration
 
 	void init() {
-		uimanager = new UIManager(&manager);
-		uimanager->CreateButton(10, 50, 100, 50, "Scene Test", ButtonCallbacks::test1);
 		background = new Background("background", true);
 		background->init();
 	}

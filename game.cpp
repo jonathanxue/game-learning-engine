@@ -10,7 +10,7 @@
 #include "UIManager.hpp"
 #include "Scene/SceneManager.hpp"
 #include "Scene/Scenes.hpp"
-#include <sstream>
+#include "LevelLoader.hpp"
 
 #include "UIResources/ButtonCallbacks.hpp"
 
@@ -32,8 +32,9 @@ AssetManager* Game::assets = new AssetManager();
 UIManager* Game::uimanager = new UIManager(&manager);
 
 //Scene Manager
-
 SceneManager* Game::scenemanager = new SceneManager(Game::assets);
+
+LevelLoader* Game::levelLoader = new LevelLoader();
 
 //Default values
 std::string Game::defaultFont = "Fixedsys";
@@ -144,8 +145,14 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	//std::string temp[] = { "monta", "rajko", "sam", "tristan", "josh" };
 	//uimanager->CreateDropdown(60, 300, 100, 50, temp, 5);
 
-	MenuScene* testscene = new MenuScene("test");
+	MenuScene* testscene = new MenuScene("test", "levels/MainMenu.xml");
+	MenuScene* testscene2 = new MenuScene("test2", "levels/Settings.xml");
+	levelLoader->LoadScene(testscene);
+	levelLoader->PopulateEntities();
+	levelLoader->LoadScene(testscene2);
+	levelLoader->PopulateEntities();
 	scenemanager->AddScene(testscene);
+	scenemanager->AddScene(testscene2);
 	scenemanager->SelectScene("test");
 
 }
@@ -161,6 +168,16 @@ auto& uiItems(manager.getGroup(Game::groupUI));
 void Game::handleEvents() {
 	eventResult = SDL_PollEvent(&event);
 	switch (event.type) {
+		case SDL_KEYDOWN:
+			if (event.key.keysym.sym == SDLK_1) {
+				printf("Switched to Scene 1\n");
+				scenemanager->SelectScene("test");
+			}
+			else if (event.key.keysym.sym == SDLK_2) {
+				printf("Switched to Scene 2\n");
+				scenemanager->SelectScene("test2");
+			}
+			break;
 		case SDL_QUIT:
 			isRunning = false;
 			break;

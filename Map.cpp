@@ -4,10 +4,14 @@
 #include "ECS/EntityComponentSystem.hpp"
 #include "ECS/Components.hpp"
 
-extern Manager manager;
+//extern Manager manager;
 
 Map::Map(std::string tID, int mapScale, int tileSize) : textureID(tID), mapScale(mapScale), tileSize(tileSize)
 {
+	scaledSize = mapScale * tileSize;
+}
+
+Map::Map(Manager* m, std::string tID, int mapScale, int tileSize) : man(m), textureID(tID), mapScale(mapScale), tileSize(tileSize) {
 	scaledSize = mapScale * tileSize;
 }
 
@@ -36,7 +40,7 @@ void Map::LoadMap(std::string path, int sizeX, int sizeY) {
 		for (int x = 0; x < sizeX; x++) {
 			mapFile.get(c);
 			if (c == '1') {
-				auto& tcol(manager.addEntity());
+				auto& tcol(man->addEntity());
 				tcol.addComponent<ColliderComponent>("terrain", x * scaledSize, y * scaledSize, scaledSize);
 				tcol.addGroup(Game::groupColliders);
 			}
@@ -50,8 +54,10 @@ void Map::LoadMap(std::string path, int sizeX, int sizeY) {
 	mapFile.close();
 }
 
+
 void Map::AddTile(int srcX, int srcY, int xpos, int ypos) {
-	auto& tile(manager.addEntity());
+	auto& tile(man->addEntity());
 	tile.addComponent<TileComponent>(srcX, srcY, xpos, ypos, tileSize, mapScale, textureID);
 	tile.addGroup(Game::groupMap);
 }
+

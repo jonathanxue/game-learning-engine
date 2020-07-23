@@ -5,6 +5,9 @@
 
 #include "../AssetManager.hpp"
 #include "../ECS/EntityComponentSystem.hpp"
+#include "../Map.hpp"
+#include "../Background.hpp"
+#include "../Map.hpp"
 
 class Scene;
 class SceneManager;
@@ -17,8 +20,33 @@ public:
 	std::string tag;
 	std::string sceneFilePath;
 	Manager manager;
-	virtual void update() {}
-	virtual void draw() {}
+
+	Background* background;
+	Map* map;
+
+	Scene(std::string t, std::string path) {
+		tag = t;
+		sceneFilePath = path;
+		
+		init();
+	}
+
+	void init() {
+		background = new Background("background", true);
+		background->init();
+		map = new Map(&manager, "terrain", 3, 32);
+	}
+
+	void update() {
+		manager.refresh();
+		manager.update();
+		//background->InvokerParallaxHorizontal();
+	}
+	void draw() {
+		background->Draw();
+		//Redo this
+		manager.draw();
+	}
 	virtual ~Scene() {}
 };
 

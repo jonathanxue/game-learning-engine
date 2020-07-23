@@ -7,13 +7,15 @@ LevelLoader::LevelLoader() {
 }
 
 
-void LevelLoader::LoadScene(Scene* sc) {
+void LevelLoader::LoadScene(Scene* sce) {
 
-	std::ifstream file(sc->sceneFilePath);
+	std::ifstream file(sce->sceneFilePath);
 	buffer = std::vector<char>(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
 	buffer.push_back('\0');
 	doc.parse<0>(&buffer[0]);
-	this->sc = sc;
+	sc = sce;
+	//Keep this just in case
+	levelType = atoi(doc.first_node("Level")->first_attribute("type")->value());
 }
 
 void LevelLoader::PopulateEntities() {
@@ -29,7 +31,6 @@ void LevelLoader::PopulateEntities() {
 		xml_node<>* componentsNode = levelNode->first_node("Components");
 		for (xml_node<>* comNode = componentsNode->first_node("Component"); comNode; comNode = comNode->next_sibling()) {
 			std::string type = comNode->first_attribute("type")->value();
-			std::cout << type << std::endl;
 			if (type == "transform") {
 				entity.addComponent<TransformComponent>(atoi(comNode->first_attribute("x")->value()), atoi(comNode->first_attribute("y")->value()),
 					atoi(comNode->first_attribute("w")->value()), atoi(comNode->first_attribute("h")->value()), 1);
@@ -42,7 +43,7 @@ void LevelLoader::PopulateEntities() {
 				entity.addComponent<UILabel>(comNode->first_attribute("value")->value(), Game::defaultFont, Game::defaultFontColour, 0);
 			}
 			else if (type == "soundeffect") {
-				entity.addComponent<SoundEffectComponent>("spellhit", 0);
+				entity.addComponent<SoundEffectComponent>(comNode->first_attribute("sound")->value(), atoi(comNode->first_attribute("repetitions")->value()));
 			}
 			else if (type == "mousecontroller") {
 				entity.addComponent<MouseController>();
@@ -63,7 +64,22 @@ void LevelLoader::PopulateEntities() {
 				entity.addComponent<UISlider>();
 			}
 		}
+		entity.addGroup(Game::groupUI);
 	}
+	delete(uman);
+}
+
+void LevelLoader::PopulateLevelVars() {
+
+	xml_node<>* root_node;
+
+	root_node = doc.first_node("Level");
+
+	if (levelType == 1) {
+		sc->map->LoadMap(root_node->first_node("MapFile")->value(), 16, 10);
+	}
+
+
 }
 
 void LevelLoader::CreateEntity(std::string st) {

@@ -9,7 +9,6 @@
 #include "MusicPlayer.hpp"
 #include "UIManager.hpp"
 #include "Scene/SceneManager.hpp"
-#include "Scene/Scenes.hpp"
 #include "LevelLoader.hpp"
 
 #include "UIResources/ButtonCallbacks.hpp"
@@ -114,27 +113,23 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	assets->AddTexture("dropdown_active", "assets/UITextures/dropdown_active.png");
 	assets->AddTexture("dropdown_passive", "assets/UITextures/dropdown_passive.png");
 
-	map = new Map("terrain", 3, 32);
-	map->LoadMap("assets/testmap.map",16,10);
+	//map = new Map("terrain", 3, 32);
+	//map->LoadMap("assets/testmap.map",16,10);
 
 	background = new Background("background", true);
 	background->init();
 
 	//ecs
-	/*player.addComponent<TransformComponent>(4);
+	player.addComponent<TransformComponent>(4);
 	player.addComponent<SpriteComponent>("player", true);
 	player.addComponent<ColliderComponent>("player");
 	player.addComponent<KeyboardController>();
 	player.getComponent<ColliderComponent>().setDrawFlag(true);
 	player.addGroup(groupPlayers);
-	*/
+	
 
 	ButtonCallbacks bck = ButtonCallbacks();
 	bck.addEntity(&ui);
-
-	//uimanager->CreateLabel(10, 5, "TestLabel");
-	//uimanager->CreateSlider(500, 700, 150, 30, "0000");
-	//uimanager->CreateButton(10, 50, 100, 50, "Test1", ButtonCallbacks::test1);
 
 	//ui.addComponent<TransformComponent>(300, 300, 200, 200, 1);
 	//ui.addComponent<UIContent>(false);
@@ -142,17 +137,24 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	//uimanager->CreateButton(10, 150, 100, 50, "Test2", std::bind(&ButtonCallbacks::test2, bck));
 
-	//std::string temp[] = { "monta", "rajko", "sam", "tristan", "josh" };
-	//uimanager->CreateDropdown(60, 300, 100, 50, temp, 5);
+	Scene* testscene = new Scene("test", "levels/MainMenu.xml");
+	Scene* testscene2 = new Scene("test2", "levels/Settings.xml");
+	Scene* testlevel = new Scene("levelTest", "levels/test.xml");
 
-	MenuScene* testscene = new MenuScene("test", "levels/MainMenu.xml");
-	MenuScene* testscene2 = new MenuScene("test2", "levels/Settings.xml");
 	levelLoader->LoadScene(testscene);
 	levelLoader->PopulateEntities();
+
 	levelLoader->LoadScene(testscene2);
 	levelLoader->PopulateEntities();
+
+	levelLoader->LoadScene(testlevel);
+	levelLoader->PopulateEntities();
+	levelLoader->PopulateLevelVars();
+
 	scenemanager->AddScene(testscene);
 	scenemanager->AddScene(testscene2);
+	scenemanager->AddScene(testlevel);
+
 	scenemanager->SelectScene("test");
 
 }
@@ -177,6 +179,10 @@ void Game::handleEvents() {
 				printf("Switched to Scene 2\n");
 				scenemanager->SelectScene("test2");
 			}
+			else if (event.key.keysym.sym == SDLK_3) {
+				printf("Switched to Scene 3\n");
+				scenemanager->SelectScene("levelTest");
+			}
 			break;
 		case SDL_QUIT:
 			isRunning = false;
@@ -188,11 +194,11 @@ void Game::handleEvents() {
 
 void Game::update() {
 
-	/*SDL_Rect playerCol = player.getComponent<ColliderComponent>().collider;
-	Vector2D playerPos = player.getComponent<TransformComponent>().position;
+	//SDL_Rect playerCol = player.getComponent<ColliderComponent>().collider;
+	//Vector2D playerPos = player.getComponent<TransformComponent>().position;
 
 	manager.refresh();
-	manager.update();*/
+	manager.update();
 
 	scenemanager->update();
 
@@ -240,11 +246,11 @@ void Game::render() {
 	}
 	for (auto& c : colliders) {
 		c->draw();
-	}
+	}*/
 	for (auto& p : players) {
 		p->draw();
 	}
-	for (auto& p : projectiles) {
+	/*for (auto& p : projectiles) {
 		p->draw();
 	}
 	for (auto& e : uiItems) {

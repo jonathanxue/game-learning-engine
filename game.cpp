@@ -10,6 +10,7 @@
 #include "UIManager.hpp"
 #include "Scene/SceneManager.hpp"
 #include "LevelLoader.hpp"
+#include "Scene/SceneDictionary.hpp"
 
 #include "UIResources/ButtonCallbacks.hpp"
 
@@ -32,6 +33,7 @@ UIManager* Game::uimanager = new UIManager(&manager);
 
 //Scene Manager
 SceneManager* Game::scenemanager = new SceneManager(Game::assets);
+SceneDictionary* Game::scenedictionary = new SceneDictionary();
 
 LevelLoader* Game::levelLoader = new LevelLoader();
 
@@ -137,15 +139,17 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	//uimanager->CreateButton(10, 150, 100, 50, "Test2", std::bind(&ButtonCallbacks::test2, bck));
 
-	Scene* testscene = new Scene("test", "levels/MainMenu.xml");
-	Scene* testscene2 = new Scene("test2", "levels/Settings.xml");
+	Scene* testscene = new Scene("mainmenu", "levels/MainMenu.xml");
+	Scene* testscene2 = new Scene("settings", "levels/Settings.xml");
 	Scene* testlevel = new Scene("levelTest", "levels/test.xml");
 
 	levelLoader->LoadScene(testscene);
 	levelLoader->PopulateEntities();
+	levelLoader->PopulateLevelVars();
 
 	levelLoader->LoadScene(testscene2);
 	levelLoader->PopulateEntities();
+	levelLoader->PopulateLevelVars();
 
 	levelLoader->LoadScene(testlevel);
 	levelLoader->PopulateEntities();
@@ -155,7 +159,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	scenemanager->AddScene(testscene2);
 	scenemanager->AddScene(testlevel);
 
-	scenemanager->SelectScene("test");
+	scenemanager->SelectScene("mainmenu");
 
 }
 
@@ -173,11 +177,11 @@ void Game::handleEvents() {
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym == SDLK_1) {
 				printf("Switched to Scene 1\n");
-				scenemanager->SelectScene("test");
+				scenemanager->SelectScene("mainmenu");
 			}
 			else if (event.key.keysym.sym == SDLK_2) {
 				printf("Switched to Scene 2\n");
-				scenemanager->SelectScene("test2");
+				scenemanager->SelectScene("settings");
 			}
 			else if (event.key.keysym.sym == SDLK_3) {
 				printf("Switched to Scene 3\n");
@@ -252,8 +256,8 @@ void Game::render() {
 	}
 	/*for (auto& p : projectiles) {
 		p->draw();
-	}
-	for (auto& e : uiItems) {
+	}*/
+	/*for (auto& e : uiItems) {
 		e->draw();
 	}*/
 	//TextureManager::Draw(assets->GetTexture("collider"), camera, SDL_FLIP_NONE);

@@ -1,6 +1,5 @@
 #pragma once
 #include <stdio.h>
-#include "game.hpp"
 #include <memory>
 #include "../ECS/Components.hpp"
 

@@ -7,6 +7,9 @@
 #include "SDL_mixer.h"
 #include "TextureManager.hpp"
 
+//Load default entries first
+static std::vector<std::string> defaultAssets;
+
 class AssetManager {
 private:
 	//Manager* manager;
@@ -39,4 +42,6 @@ public:
 	//SFX
 	void AddSoundEffect(std::string id, const char* path);
 	Mix_Chunk* GetSoundEffect(std::string id);
+
+	void CleanUnusedAssets();
 };

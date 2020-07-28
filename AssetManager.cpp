@@ -1,5 +1,6 @@
 #include "AssetManager.hpp"
 #include "ECS/Components.hpp"
+#include "Scene/SceneDictionary.hpp"
 
 //AssetManager::AssetManager(Manager* man) : manager(man)
 //{}
@@ -50,4 +51,8 @@ void AssetManager::AddSoundEffect(std::string id, const char* path) {
 
 Mix_Chunk* AssetManager::GetSoundEffect(std::string id) {
 	return soundEffects[id];
+}
+
+void AssetManager::CleanUnusedAssets() {
+	
 }

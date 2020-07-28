@@ -38,9 +38,9 @@ void Background::init() {
 	}
 }
 
-void Background::LoadBackground(std::string path) {
-	textureID = path;
-	texture = game.assets->GetTexture(path);
+void Background::LoadBackground(std::string name) {
+	textureID = name;
+	texture = game.assets->GetTexture(name);
 	//Reset offsets if new background
 	xOff = yOff = 0;
 }

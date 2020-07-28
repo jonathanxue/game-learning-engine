@@ -1,6 +1,7 @@
 #include "LevelLoader.hpp"
 #include "UIManager.hpp"
 #include "Scene/SceneManager.hpp"
+#include "Scene/SceneDictionary.hpp"
 
 LevelLoader::LevelLoader() {
 
@@ -26,18 +27,23 @@ void LevelLoader::PopulateEntities() {
 
 	root_node = doc.first_node("Level");
 	entity_node = root_node->first_node("Entities");
+
 	for (xml_node<>* levelNode = entity_node->first_node("Entity"); levelNode; levelNode = levelNode->next_sibling()) {
+
 		auto& entity(sc->manager.addEntity());
 		xml_node<>* componentsNode = levelNode->first_node("Components");
+
 		for (xml_node<>* comNode = componentsNode->first_node("Component"); comNode; comNode = comNode->next_sibling()) {
+
 			std::string type = comNode->first_attribute("type")->value();
+
 			if (type == "transform") {
 				entity.addComponent<TransformComponent>(atoi(comNode->first_attribute("x")->value()), atoi(comNode->first_attribute("y")->value()),
 					atoi(comNode->first_attribute("w")->value()), atoi(comNode->first_attribute("h")->value()), 1);
 			}
 			else if (type == "button") {
 				entity.addComponent<UIButton>();
-				entity.getComponent<UIButton>().setCallBack(ButtonCallbacks::test1); //TODO, change
+				entity.getComponent<UIButton>().setCallBack(Game::scenedictionary->Callbacks[comNode->first_attribute("callback")->value()]); //TODO, change
 			}
 			else if (type == "label") {
 				entity.addComponent<UILabel>(comNode->first_attribute("value")->value(), Game::defaultFont, Game::defaultFontColour, 0);
@@ -64,7 +70,9 @@ void LevelLoader::PopulateEntities() {
 				entity.addComponent<UISlider>();
 			}
 		}
-		entity.addGroup(Game::groupUI);
+		//Get group
+		std::string gr = levelNode->first_node("Group")->value();
+		entity.addGroup(Game::scenedictionary->Groups[gr]);
 	}
 	delete(uman);
 }
@@ -74,6 +82,10 @@ void LevelLoader::PopulateLevelVars() {
 	xml_node<>* root_node;
 
 	root_node = doc.first_node("Level");
+
+	//Make asset library first
+	sc->background->LoadBackground(root_node->first_node("Background")->first_attribute("assetName")->value());
+	sc->scrolling = (root_node->first_node("Background")->first_attribute("scrolling")->value() == "true"); //Find if we scroll the background
 
 	if (levelType == 1) {
 		sc->map->LoadMap(root_node->first_node("MapFile")->value(), 16, 10);

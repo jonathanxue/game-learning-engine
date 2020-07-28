@@ -7,7 +7,6 @@
 #include "../ECS/EntityComponentSystem.hpp"
 #include "../Map.hpp"
 #include "../Background.hpp"
-#include "../Map.hpp"
 
 class Scene;
 class SceneManager;
@@ -16,17 +15,36 @@ class Scene {
 private:
 
 public:
+	enum groubLabels : std::size_t {
+		groupBackgrounds,
+		groupMap,
+		groupColliders,
+		groupProjectiles,
+		groupUI
+	};
+
 	bool permanent = false;
 	std::string tag;
 	std::string sceneFilePath;
 	Manager manager;
 
 	Background* background;
+	bool scrolling = false;
 	Map* map;
+
+	//Groups belonging to scene
+	//TODO: Refactor later
+	std::vector<Entity*> backgrounds;
+	std::vector<Entity*> tiles;
+	std::vector<Entity*> colliders;
+	std::vector<Entity*> projectiles;
+	std::vector<Entity*> uiItems;
 
 	Scene(std::string t, std::string path) {
 		tag = t;
 		sceneFilePath = path;
+
+		
 		
 		init();
 	}
@@ -40,14 +58,40 @@ public:
 	void update() {
 		manager.refresh();
 		manager.update();
-		//background->InvokerParallaxHorizontal();
+
+		//TODO: Refactor so we dont have to do this all the time
+		backgrounds = manager.getGroup(groupBackgrounds);
+		tiles = manager.getGroup(groupMap);
+		colliders = manager.getGroup(groupColliders);
+		projectiles = manager.getGroup(groupProjectiles);
+		uiItems = manager.getGroup(groupUI);
+
+		if (scrolling) {
+			background->InvokeParallaxHorizontal();
+		}
+
 	}
 	void draw() {
 		background->Draw();
-		//Redo this
-		manager.draw();
+		for (auto& e : backgrounds) {
+			e->draw();
+		}
+		for (auto& e : tiles) {
+			e->draw();
+		}
+		for (auto& e : colliders) {
+			e->draw();
+		}
+		for (auto& e : projectiles) {
+			e->draw();
+		}
+		for (auto& e : uiItems) {
+			e->draw();
+		}
+		//Might need to include player group i dunno
+		//manager.draw();
 	}
-	virtual ~Scene() {}
+	~Scene() {}
 };
 
 class SceneManager {

@@ -3,6 +3,7 @@
 #include <fstream>
 #include "ECS/EntityComponentSystem.hpp"
 #include "ECS/Components.hpp"
+#include "Scene/SceneManager.hpp"
 
 //extern Manager manager;
 
@@ -42,7 +43,8 @@ void Map::LoadMap(std::string path, int sizeX, int sizeY) {
 			if (c == '1') {
 				auto& tcol(man->addEntity());
 				tcol.addComponent<ColliderComponent>("terrain", x * scaledSize, y * scaledSize, scaledSize);
-				tcol.addGroup(Game::groupColliders);
+				//I'm not totally sure why this works
+				tcol.addGroup(Scene::groupColliders);
 			}
 			//else {
 				mapFile.ignore();
@@ -58,6 +60,6 @@ void Map::LoadMap(std::string path, int sizeX, int sizeY) {
 void Map::AddTile(int srcX, int srcY, int xpos, int ypos) {
 	auto& tile(man->addEntity());
 	tile.addComponent<TileComponent>(srcX, srcY, xpos, ypos, tileSize, mapScale, textureID);
-	tile.addGroup(Game::groupMap);
+	tile.addGroup(Scene::groupMap);
 }
 

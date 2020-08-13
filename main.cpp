@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
 	const int frameDelay = 1000 / fps;
 
 	game = new Game();
-	game->init("Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1200, 800, false);
+	game->init("Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, game->width, game->height, false);
 
 	Uint32 frameStart;
 	int frameTime;

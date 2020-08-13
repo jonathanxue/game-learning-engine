@@ -52,7 +52,7 @@ MusicPlayer* musicplayer;
 //Level entities
 auto& player(manager.addEntity());
 auto& ui(manager.addEntity());
-
+auto& tabs(manager.addEntity());
 
 Game::Game() {
 	Game::window = nullptr;
@@ -114,6 +114,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	assets->AddTexture("slider_full", "assets/UITextures/slider_full.png");
 	assets->AddTexture("dropdown_active", "assets/UITextures/dropdown_active.png");
 	assets->AddTexture("dropdown_passive", "assets/UITextures/dropdown_passive.png");
+	assets->AddTexture("tabheader_active", "assets/UITextures/tabheader_active.png");
+	assets->AddTexture("tabheader_passive", "assets/UITextures/tabheader_passive.png");
+	assets->AddTexture("tabcontent", "assets/UITextures/tabcontent.png");
 
 	//map = new Map("terrain", 3, 32);
 	//map->LoadMap("assets/testmap.map",16,10);
@@ -129,6 +132,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.getComponent<ColliderComponent>().setDrawFlag(true);
 	player.addGroup(groupPlayers);
 	
+
+	tabs.addComponent<TransformComponent>(100, 50, 1000, 600, 1);
+	tabs.addComponent<UITabbedWindow>();
+	tabs.addComponent<MouseController>();
+	tabs.addGroup(groupUI);
 
 	ButtonCallbacks bck = ButtonCallbacks();
 	bck.addEntity(&ui);
@@ -159,7 +167,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	scenemanager->AddScene(testscene2);
 	scenemanager->AddScene(testlevel);
 
-	scenemanager->SelectScene("mainmenu");
+	//scenemanager->SelectScene("mainmenu");
 
 }
 
@@ -198,13 +206,21 @@ void Game::handleEvents() {
 
 void Game::update() {
 
-	//SDL_Rect playerCol = player.getComponent<ColliderComponent>().collider;
-	//Vector2D playerPos = player.getComponent<TransformComponent>().position;
+	SDL_Rect playerCol = player.getComponent<ColliderComponent>().collider;
+	Vector2D playerPos = player.getComponent<TransformComponent>().position;
 
 	manager.refresh();
 	manager.update();
 
-	scenemanager->update();
+	//scenemanager->update();
+
+	/*for (auto& c : scenemanager->GetCurrentScene().colliders) {
+		SDL_Rect cCol = c->getComponent<ColliderComponent>().collider;
+		if (Collision::AABB(cCol, playerCol)) {
+			player.getComponent<TransformComponent>().position = playerPos;
+		}
+	}*/
+
 
 	/*for (auto& c : colliders) {
 		SDL_Rect cCol = c->getComponent<ColliderComponent>().collider;
@@ -212,13 +228,14 @@ void Game::update() {
 			player.getComponent<TransformComponent>().position = playerPos;
 		}
 	}
+
 	for (auto& p : projectiles) {
 		if (Collision::AABB(player.getComponent<ColliderComponent>().collider, p->getComponent<ColliderComponent>().collider)) {
 			p->getComponent<SoundEffectComponent>().stop();
 			p->destroy();
 		}
 	}
-
+	*/
 	//Camera following
 	camera.x = player.getComponent<TransformComponent>().position.x - 400;
 	camera.y = player.getComponent<TransformComponent>().position.y - 320;
@@ -229,7 +246,8 @@ void Game::update() {
 	}
 	if (camera.y < 0) {
 		camera.y = 0;
-	}*/
+	}
+
 	/*if (camera.x > camera.w) {
 		camera.x = camera.w;
 	}
@@ -242,13 +260,13 @@ void Game::update() {
 
 void Game::render() {
 	SDL_RenderClear(renderer);
-	scenemanager->draw();
-	//background->Draw();
+	//scenemanager->draw();
+	background->Draw();
 	//Add stuff to update here
 	/*for (auto& t : tiles) {
 		t->draw();
-	}
-	for (auto& c : colliders) {
+	}*/
+	/*for (auto& c : colliders) {
 		c->draw();
 	}*/
 	for (auto& p : players) {
@@ -257,9 +275,9 @@ void Game::render() {
 	/*for (auto& p : projectiles) {
 		p->draw();
 	}*/
-	/*for (auto& e : uiItems) {
+	for (auto& e : uiItems) {
 		e->draw();
-	}*/
+	}
 	//TextureManager::Draw(assets->GetTexture("collider"), camera, SDL_FLIP_NONE);
 	SDL_RenderPresent(renderer);
 }

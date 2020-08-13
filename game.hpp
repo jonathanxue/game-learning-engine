@@ -35,6 +35,9 @@ public:
 	void clean();
 	bool running() { return isRunning; }
 
+	int width = 1200;
+	int height = 800;
+
 	enum groubLabels : std::size_t {
 		groupBackgrounds,
 		groupMap,

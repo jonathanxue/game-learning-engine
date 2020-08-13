@@ -9,9 +9,11 @@
 #include "../TextureManager.hpp"
 #include "../AssetManager.hpp"
 
+//Game stuff
 #include "TransformComponent.hpp"
 #include "SpriteComponent.hpp"
 #include "ColliderComponent.hpp"
+#include "NewtonComponent.hpp"
 #include "TileComponent.hpp"
 #include "SoundEffectComponent.hpp"
 #include "ProjectileComponent.hpp"
@@ -22,6 +24,7 @@
 #include "UIContent.hpp"
 #include "UISlider.hpp"
 #include "UIDropDown.hpp"
+#include "UITabbedWindow.hpp"
 
 //User input
 #include "TypingController.hpp"

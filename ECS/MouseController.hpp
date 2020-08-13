@@ -10,6 +10,7 @@ private:
 	UIDropDown* dropdown;
 	TypingController* keyboard;
 	TransformComponent* transform;
+	UITabbedWindow* tabwindow;
 	bool clickable = true;
 public:
 
@@ -24,6 +25,7 @@ public:
 		keyboard = &entity->getComponent<TypingController>();
 		transform = &entity->getComponent<TransformComponent>();
 		dropdown = &entity->getComponent<UIDropDown>();
+		tabwindow = &entity->getComponent<UITabbedWindow>();
 	}
 
 	void setStatus(bool val) {
@@ -66,6 +68,11 @@ public:
 					if (dropdown != NULL) {
 						dropdown->setPressed(true); //Press mouse
 					}
+					if (tabwindow != NULL) {
+						if (tabwindow->checkMouseInBoundsTab(Game::event.button.x, Game::event.button.y) >= 0) {
+							tabwindow->isPressed = true;
+						}
+					}
 				}
 				break;
 			default:
@@ -104,6 +111,15 @@ public:
 								dropdown->setFocus(true);
 							}
 						}
+					}
+					if (tabwindow != NULL) {
+						int tabIndex = tabwindow->checkMouseInBoundsTab(Game::event.button.x, Game::event.button.y);
+						if (tabIndex >= 0) {
+							if (tabwindow->isPressed) {
+								tabwindow->updateSelectedTab(tabIndex);
+							}
+						}
+						tabwindow->isPressed = false;
 					}
 				}
 				if (slider != NULL) {

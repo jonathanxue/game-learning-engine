@@ -28,11 +28,13 @@ void LevelLoader::PopulateEntities() {
 	root_node = doc.first_node("Level");
 	entity_node = root_node->first_node("Entities");
 
+	//Scan entities
 	for (xml_node<>* levelNode = entity_node->first_node("Entity"); levelNode; levelNode = levelNode->next_sibling()) {
 
 		auto& entity(sc->manager.addEntity());
 		xml_node<>* componentsNode = levelNode->first_node("Components");
 
+		//Scan components
 		for (xml_node<>* comNode = componentsNode->first_node("Component"); comNode; comNode = comNode->next_sibling()) {
 
 			std::string type = comNode->first_attribute("type")->value();
@@ -74,6 +76,7 @@ void LevelLoader::PopulateEntities() {
 		std::string gr = levelNode->first_node("Group")->value();
 		entity.addGroup(Game::scenedictionary->Groups[gr]);
 	}
+	//Not sure if necessary
 	delete(uman);
 }
 

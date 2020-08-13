@@ -26,4 +26,9 @@ public:
 			return false;
 		}
 	}
+
+	static void CenterLabelInRect(SDL_Rect& labelRect, const SDL_Rect& reference) {
+		labelRect.x = reference.x + (reference.w / 2) - (labelRect.w / 2);
+		labelRect.y = reference.y + (reference.h / 2) - (labelRect.h / 2);
+	}
 };

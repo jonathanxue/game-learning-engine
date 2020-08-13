@@ -40,6 +40,8 @@ public:
 		}
 		transform = &entity->getComponent<TransformComponent>();
 
+		setDrawFlag(true);
+
 		tex = TextureManager::LoadTexture("assets/hitbox.png");
 		srcRect = { 0, 0, 32, 32 };
 		destRect = { collider.x, collider.y, collider.w, collider.h };

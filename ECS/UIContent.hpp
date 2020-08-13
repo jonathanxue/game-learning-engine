@@ -25,6 +25,7 @@ public:
 		}
 	}
 
+	//Maybe make this a manager for performance sake - worse memory usage though
 	void addEntity(Entity* ent) {
 		if (transform != NULL) {
 			// Make the child entities' position relative to the parent
@@ -47,8 +48,8 @@ public:
 	void update() override {
 		if (transform != NULL) {
 			//Keep delta to update child components
-			deltaPos.x = static_cast<int>(transform->position.x) - dest.x;
-			deltaPos.y = static_cast<int>(transform->position.y) - dest.y;
+			deltaPos.x = transform->position.x - dest.x;
+			deltaPos.y = transform->position.y - dest.y;
 			deltaW = transform->width - dest.w;
 			deltaH = transform->height - dest.h;
 

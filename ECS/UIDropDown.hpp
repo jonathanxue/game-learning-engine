@@ -88,7 +88,7 @@ public:
 		if (contents.size() < 1) {
 			return;
 		}
-		int temp = selectedItem;
+
 		int relY = ypos - static_cast<int>(trans->position.y);
 		selectedItem = (relY - (relY % divHeight)) / divHeight; //Retrieves the index associated with the click position
 		value = contents[selectedItem];

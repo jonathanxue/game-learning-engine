@@ -44,8 +44,6 @@ public:
 		tag = t;
 		sceneFilePath = path;
 
-		
-		
 		init();
 	}
 
@@ -72,6 +70,8 @@ public:
 
 	}
 	void draw() {
+		//std::cout << "Tiles: " << tiles.size() << std::endl;
+		//std::cout << "Colliders: " << colliders.size() << std::endl;
 		background->Draw();
 		for (auto& e : backgrounds) {
 			e->draw();
@@ -79,8 +79,8 @@ public:
 		for (auto& e : tiles) {
 			e->draw();
 		}
-		for (auto& e : colliders) {
-			e->draw();
+		for (auto& c : colliders) {
+			c->draw();
 		}
 		for (auto& e : projectiles) {
 			e->draw();
@@ -137,6 +137,10 @@ public:
 			scenes.erase(scenes.begin() + oldIndex);
 			free(oldScene);
 		}
+	}
+
+	Scene& GetCurrentScene() {
+		return *currentScene;
 	}
 
 	void LoadAssets() {

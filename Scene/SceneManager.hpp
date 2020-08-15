@@ -20,7 +20,8 @@ public:
 		groupMap,
 		groupColliders,
 		groupProjectiles,
-		groupUI
+		groupUI,
+		groupNone
 	};
 
 	bool permanent = false;
@@ -39,6 +40,7 @@ public:
 	std::vector<Entity*> colliders;
 	std::vector<Entity*> projectiles;
 	std::vector<Entity*> uiItems;
+	std::vector<Entity*> grouplessItems;
 
 	Scene(std::string t, std::string path) {
 		tag = t;
@@ -63,6 +65,7 @@ public:
 		colliders = manager.getGroup(groupColliders);
 		projectiles = manager.getGroup(groupProjectiles);
 		uiItems = manager.getGroup(groupUI);
+		grouplessItems = manager.getGroup(groupNone);
 
 		if (scrolling) {
 			background->InvokeParallaxHorizontal();

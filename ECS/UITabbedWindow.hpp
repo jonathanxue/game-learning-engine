@@ -9,19 +9,25 @@
 */
 class UITabContent {
 private:
-	TransformComponent* transform; //All tabs will share the same tranform component, as they all take the same space
+	TransformComponent* transform;
 	SDL_Texture* texture;
-	SDL_Rect dest; //Maybe move this up to the window and have all the tabs share
+	SDL_Rect dest;
 public:
 	std::string tabName;
-	//std::vector<Entity*> entities;
+	std::vector<std::unique_ptr<Entity>> entities;
 
-	UITabContent(std::string s, SDL_Texture* tex, TransformComponent* trans, int tabHeight) : tabName(s), texture(tex) {
-		transform = new TransformComponent(trans->position.x, trans->position.y + tabHeight, trans->width, trans->height - tabHeight, trans->scale);
+	UITabContent(std::string s, SDL_Texture* tex, TransformComponent* trans, SDL_Rect& rect) : tabName(s), texture(tex) {
+		transform = trans;
+		dest = rect;
 	}
 
-	void addEntity(Entity& e) {
-		//entities.emplace_back(e);
+	void addEntity(Entity* e) {
+		if (transform != NULL) {
+			// Make the child entities' position relative to the parent
+			e->getComponent<TransformComponent>().position += transform->position;
+		}
+		std::unique_ptr<Entity> uPtr{ e };
+		entities.emplace_back(std::move(uPtr));
 	}
 
 	void init() {
@@ -30,22 +36,21 @@ public:
 
 	void update() {
 		ComponentHelper::UpdateRectangleToTransform(dest, *transform);
-		/*for (auto& e: entities) {
+		for (auto& e: entities) {
 			e->update();
-		}*/
+		}
 	}
 
 	void draw() {
 		TextureManager::Draw(texture, dest, SDL_FLIP_NONE);
-		/*for (auto& e : entities) {
+		for (auto& e : entities) {
 			e->draw();
-		}*/
+		}
 	}
 };
 
 class UITabbedWindow : public Component {
 private:
-	std::vector<UITabContent*> tabs;
 	std::vector<SDL_Texture*> labelTextures;
 	
 	TransformComponent* trans;
@@ -58,7 +63,13 @@ private:
 	int tabHeight = 32;
 	int tabWidth = 0;
 public:
+	std::vector<UITabContent*> tabs;
+
 	bool isPressed = false;
+
+	TransformComponent* contentTrans;
+
+	UITabbedWindow() {}
 
 	int checkMouseInBoundsTab(int xpos, int ypos) {
 		//Not even in the tab
@@ -75,13 +86,14 @@ public:
 	}
 
 	void createTab(std::string tabName) {
-		UITabContent* t = new UITabContent(tabName, containerBG, trans, tabHeight);
+		UITabContent* t = new UITabContent(tabName, containerBG, contentTrans, contentRect);
 		tabs.emplace_back(t);
 		t->init();
 	}
 
 	void init() override {
 		trans = &entity->getComponent<TransformComponent>();
+		contentTrans = new TransformComponent(trans->position.x, trans->position.y + tabHeight, trans->width, trans->height - tabHeight, trans->scale);
 
 		activeTab = Game::assets->GetTexture("tabheader_active");
 		passiveTab = Game::assets->GetTexture("tabheader_passive");

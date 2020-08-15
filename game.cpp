@@ -54,6 +54,9 @@ auto& player(manager.addEntity());
 auto& ui(manager.addEntity());
 auto& tabs(manager.addEntity());
 
+auto& tab1(manager.addEntity());
+auto& tab2(manager.addEntity());
+
 Game::Game() {
 	Game::window = nullptr;
 }
@@ -132,11 +135,29 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.getComponent<ColliderComponent>().setDrawFlag(true);
 	player.addGroup(groupPlayers);
 	
+	tab1.addComponent<TransformComponent>(100, 50, 200, 64, 1);
+	tab1.addComponent<UIButton>();
+	tab1.addComponent<UILabel>("Tab 1 Button", Game::defaultFont, Game::defaultFontColour, 0);
+	tab1.getComponent<UIButton>().setCallBack(ButtonCallbacks::test1);
+	tab1.addComponent<SoundEffectComponent>("spellhit", 0);
+	tab1.addComponent<MouseController>();
+	tab1.addGroup(Scene::groupNone);
+
+	tab2.addComponent<TransformComponent>(100, 50, 200, 64, 1);
+	tab2.addComponent<UIButton>();
+	tab2.addComponent<UILabel>("Tab 2 Button", Game::defaultFont, Game::defaultFontColour, 0);
+	tab2.addComponent<SoundEffectComponent>("spellhit", 0);
+	tab2.getComponent<UIButton>().setCallBack(ButtonCallbacks::test1);
+	tab2.addComponent<MouseController>();
+	tab2.addGroup(Scene::groupNone);
 
 	tabs.addComponent<TransformComponent>(100, 50, 1000, 600, 1);
 	tabs.addComponent<UITabbedWindow>();
 	tabs.addComponent<MouseController>();
 	tabs.addGroup(groupUI);
+
+	tabs.getComponent<UITabbedWindow>().tabs[0]->addEntity(&tab1);
+	tabs.getComponent<UITabbedWindow>().tabs[1]->addEntity(&tab2);
 
 	ButtonCallbacks bck = ButtonCallbacks();
 	bck.addEntity(&ui);

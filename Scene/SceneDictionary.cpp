@@ -11,7 +11,8 @@ SceneDictionary::SceneDictionary() {
 		{"tiles", Scene::groupMap},
 		{"colliders", Scene::groupColliders},
 		{"projectiles", Scene::groupProjectiles},
-		{"uiItems", Scene::groupUI}
+		{"uiItems", Scene::groupUI},
+		{"grouplessItems", Scene::groupNone} //Group for housing Entities that are more difficult to control and don't really belong anywhere
 	};
 
 	//Dynamic-ish method assignment

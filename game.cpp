@@ -188,7 +188,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	scenemanager->AddScene(testscene2);
 	scenemanager->AddScene(testlevel);
 
-	//scenemanager->SelectScene("mainmenu");
+	scenemanager->SelectScene("mainmenu");
 
 }
 
@@ -233,7 +233,7 @@ void Game::update() {
 	manager.refresh();
 	manager.update();
 
-	//scenemanager->update();
+	scenemanager->update();
 
 	/*for (auto& c : scenemanager->GetCurrentScene().colliders) {
 		SDL_Rect cCol = c->getComponent<ColliderComponent>().collider;
@@ -281,8 +281,8 @@ void Game::update() {
 
 void Game::render() {
 	SDL_RenderClear(renderer);
-	//scenemanager->draw();
-	background->Draw();
+	scenemanager->draw();
+	//background->Draw();
 	//Add stuff to update here
 	/*for (auto& t : tiles) {
 		t->draw();
@@ -290,15 +290,15 @@ void Game::render() {
 	/*for (auto& c : colliders) {
 		c->draw();
 	}*/
-	for (auto& p : players) {
+	/*for (auto& p : players) {
 		p->draw();
-	}
+	}*/
 	/*for (auto& p : projectiles) {
 		p->draw();
 	}*/
-	for (auto& e : uiItems) {
+	/*for (auto& e : uiItems) {
 		e->draw();
-	}
+	}*/
 	//TextureManager::Draw(assets->GetTexture("collider"), camera, SDL_FLIP_NONE);
 	SDL_RenderPresent(renderer);
 }

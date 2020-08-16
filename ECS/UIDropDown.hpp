@@ -5,12 +5,17 @@ class UIDropDown : public Component {
 private:
 	TransformComponent* trans;
 	SDL_Rect dest, textDest;
-	SDL_Texture* activeTexture, *passiveTexture, *labelTexture;
-	std::string value = "";
+	SDL_Texture* activeTexture, *passiveTexture;
+
+	std::vector<SDL_Texture*> textTextures;
 	std::vector<std::string> contents;
+
+	std::string value = "";
 	int selectedItem = 0; //This is index of contents
+
 	int divHeight = 30;
 	int minWidth = 50;
+
 	bool inFocus = false;
 	bool pressed = false;
 public:
@@ -45,6 +50,11 @@ public:
 		return inFocus;
 	}
 
+
+	std::string getValue() {
+		return value;
+	}
+
 	//TODO: Put this in ComponentHelper.hpp
 	void centerLabel() {
 		textDest.x = (dest.x + (dest.w / 2)) - ((textDest.w) / 2);
@@ -53,8 +63,15 @@ public:
 
 	void setContents(std::string in[], int size) {
 		contents.clear();
+		textTextures.clear();
 		for (int i = 0; i < size; i++) {
 			contents.push_back(in[i]);
+
+			//Initialize textures
+			SDL_Surface* surf = TTF_RenderText_Blended(Game::assets->GetFont(Game::defaultFont), in[i].c_str(), Game::defaultFontColour);
+			SDL_Texture* text = SDL_CreateTextureFromSurface(Game::renderer, surf);
+			SDL_FreeSurface(surf);
+			textTextures.push_back(text);
 		}
 	}
 
@@ -70,18 +87,21 @@ public:
 
 		//Initialize selcted value and texture
 		value = contents[selectedItem];
-		SDL_Surface* surf = TTF_RenderText_Blended(Game::assets->GetFont(Game::defaultFont), value.c_str(), Game::defaultFontColour);
-		labelTexture = SDL_CreateTextureFromSurface(Game::renderer, surf);
-		SDL_FreeSurface(surf);
-		SDL_QueryTexture(labelTexture, nullptr, nullptr, &textDest.w, &textDest.h);
+
+		if (textTextures.size() > 0) {
+			textTextures.clear();
+		}
+
+		for (auto s : contents) {
+			SDL_Surface* surf = TTF_RenderText_Blended(Game::assets->GetFont(Game::defaultFont), s.c_str(), Game::defaultFontColour);
+			SDL_Texture* text = SDL_CreateTextureFromSurface(Game::renderer, surf);
+			SDL_FreeSurface(surf);
+			textTextures.push_back(text);
+		}
 
 		//temp
 		drawFlag = true;
 		inFocus = false;
-	}
-	
-	std::string getValue() {
-		return value;
 	}
 
 	void updateSelectedItem(int ypos) {
@@ -92,18 +112,6 @@ public:
 		int relY = ypos - static_cast<int>(trans->position.y);
 		selectedItem = (relY - (relY % divHeight)) / divHeight; //Retrieves the index associated with the click position
 		value = contents[selectedItem];
-
-		//Update label texture to new value
-		if (labelTexture != nullptr) {
-			SDL_DestroyTexture(labelTexture);
-		}
-
-		SDL_Surface* surf = TTF_RenderText_Blended(Game::assets->GetFont(Game::defaultFont), value.c_str(), Game::defaultFontColour);
-		labelTexture = SDL_CreateTextureFromSurface(Game::renderer, surf);
-		SDL_FreeSurface(surf);
-
-		SDL_QueryTexture(labelTexture, nullptr, nullptr, &textDest.w, &textDest.h);
-
 	}
 
 	void update() override {
@@ -124,22 +132,15 @@ public:
 					for (int i = 0; i < contents.size(); i++) {
 						if (i == selectedItem) { //Highlight the already selected value
 							TextureManager::Draw(activeTexture, dest, SDL_FLIP_NONE);
-							SDL_RenderCopy(Game::renderer, labelTexture, nullptr, &textDest); //draw already existing label
+							SDL_QueryTexture(textTextures[i], nullptr, nullptr, &textDest.w, &textDest.h);
+							centerLabel();
+							SDL_RenderCopy(Game::renderer, textTextures[i], nullptr, &textDest); //draw already existing label
 						}
 						else {
-							//We create temporary texture for each non-selected entry
-							SDL_Texture* tempTexture;
-							SDL_Surface* surf = TTF_RenderText_Blended(Game::assets->GetFont(Game::defaultFont), contents[i].c_str(), Game::defaultFontColour);
-							tempTexture = SDL_CreateTextureFromSurface(Game::renderer, surf);
-							SDL_FreeSurface(surf);
-							SDL_QueryTexture(tempTexture, nullptr, nullptr, &textDest.w, &textDest.h);
-
-							centerLabel();
-
 							TextureManager::Draw(passiveTexture, dest, SDL_FLIP_NONE); //Draw container
-							SDL_RenderCopy(Game::renderer, tempTexture, nullptr, &textDest); //Draw label
-
-							SDL_DestroyTexture(tempTexture);
+							SDL_QueryTexture(textTextures[i], nullptr, nullptr, &textDest.w, &textDest.h);
+							centerLabel();
+							SDL_RenderCopy(Game::renderer, textTextures[i], nullptr, &textDest); //Draw label
 						}
 						dest.y += divHeight;
 						textDest.y += divHeight;
@@ -148,38 +149,34 @@ public:
 					textDest.y -= divHeight * contents.size();
 				}
 				else { //If control is closed DEFAULT CLOSED
-					centerLabel();
 					TextureManager::Draw(activeTexture, dest, SDL_FLIP_NONE);
-					SDL_RenderCopy(Game::renderer, labelTexture, nullptr, &textDest);
+					SDL_QueryTexture(textTextures[selectedItem], nullptr, nullptr, &textDest.w, &textDest.h);
+					centerLabel();
+					SDL_RenderCopy(Game::renderer, textTextures[selectedItem], nullptr, &textDest);
 				}
 			}
 			else { //If mouse pressed down on control
 				if (!inFocus) { //If control is closed
 					TextureManager::Draw(passiveTexture, dest, SDL_FLIP_NONE);
-					
-					SDL_RenderCopy(Game::renderer, labelTexture, nullptr, &textDest);
+					SDL_QueryTexture(textTextures[selectedItem], nullptr, nullptr, &textDest.w, &textDest.h);
+					centerLabel();
+					SDL_RenderCopy(Game::renderer, textTextures[selectedItem], nullptr, &textDest);
 				}
 				//TODO: Refactor this mess
 				else { //If control is opened
 					for (int i = 0; i < contents.size(); i++) {
 						if (i == selectedItem) {
 							TextureManager::Draw(activeTexture, dest, SDL_FLIP_NONE);
-							SDL_RenderCopy(Game::renderer, labelTexture, nullptr, &textDest);
+							SDL_QueryTexture(textTextures[selectedItem], nullptr, nullptr, &textDest.w, &textDest.h);
+							centerLabel();
+							SDL_RenderCopy(Game::renderer, textTextures[selectedItem], nullptr, &textDest);
 						}
 						else {
-							//We create temporary texture for each non-selected entry
-							SDL_Texture* tempTexture;
-							SDL_Surface* surf = TTF_RenderText_Blended(Game::assets->GetFont(Game::defaultFont), contents[i].c_str(), Game::defaultFontColour);
-							tempTexture = SDL_CreateTextureFromSurface(Game::renderer, surf);
-							SDL_FreeSurface(surf);
-							SDL_QueryTexture(tempTexture, nullptr, nullptr, &textDest.w, &textDest.h);
-
-							centerLabel();
-
 							TextureManager::Draw(passiveTexture, dest, SDL_FLIP_NONE); //Draw container
-							SDL_RenderCopy(Game::renderer, tempTexture, nullptr, &textDest); //Draw label
-
-							SDL_DestroyTexture(tempTexture);
+							SDL_QueryTexture(textTextures[i], nullptr, nullptr, &textDest.w, &textDest.h);
+							centerLabel();
+							SDL_RenderCopy(Game::renderer, textTextures[i], nullptr, &textDest); //Draw label
+							
 						}
 						dest.y += divHeight;
 						textDest.y += divHeight;
